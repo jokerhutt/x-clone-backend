@@ -21,6 +21,7 @@ target/
 
 ### Env ###
 .env
+!.example.env
 nginx/default.conf
 application.yml
 application.yaml

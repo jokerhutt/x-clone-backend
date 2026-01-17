@@ -1,9 +1,14 @@
-FROM openjdk:21-jdk
-
+FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /app
 
-COPY target/xclone-0.0.1-SNAPSHOT.jar app.jar
+COPY pom.xml .
+RUN mvn dependency:resolve -Djava.net.preferIPv4Stack=true
 
+COPY src ./src
+RUN mvn clean package -DskipTests -Djava.net.preferIPv4Stack=true
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=builder /app/target/xclone-*.jar app.jar
 EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","/app/app.jar"]
