@@ -1,152 +1,122 @@
-package com.xclone.xclone.domain.feed;
+package com.xclone.xclone.domain.feed
 
-import com.xclone.xclone.domain.post.Post;
-import com.xclone.xclone.domain.post.PostMediaRepository;
-import com.xclone.xclone.domain.post.PostRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
+import com.xclone.xclone.domain.like.Like
+import com.xclone.xclone.domain.like.LikeRepository
+import com.xclone.xclone.domain.post.Post
+import com.xclone.xclone.domain.post.PostMediaRepository
+import com.xclone.xclone.domain.post.PostRepository
+import com.xclone.xclone.domain.user.UserDTO
+import com.xclone.xclone.domain.user.UserService
+import jakarta.transaction.Transactional
+import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import kotlin.math.pow
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static com.xclone.xclone.util.EdgeRankUtils.generateFeedEntriesList;
-import static com.xclone.xclone.util.EdgeRankUtils.generatePostRankList;
 
 @Service
-public class EdgeRank {
+class EdgeRank(
+    private val userService: UserService,
+    private val postRepository: PostRepository,
+    private val likeRepository: LikeRepository,
+    private val postMediaRepository: PostMediaRepository,
+    private val feedEntryRepository: FeedEntryRepository
+) {
 
-    private final PostRepository postRepository;
-    private final PostMediaRepository postMediaRepository;
-    private final LikeRepository likeRepository;
-    private final UserServicee userService;
-    private final FeedEntryRepository feedEntryRepository;
-
-    @Autowired
-    public EdgeRank (PostRepository postRepository, PostMediaRepository postMediaRepository, LikeRepository likeRepository, @Lazy UserServicee userService, FeedEntryRepository feedEntryRepository) {
-        this.postRepository = postRepository;
-        this.postMediaRepository = postMediaRepository;
-        this.likeRepository = likeRepository;
-        this.userService = userService;
-        this.feedEntryRepository = feedEntryRepository;
-    }
 
     @Transactional
-    public void generateFeed (Integer userId) {
-        ArrayList<PostRank> postRanks = buildAndGetNewFeed(userId);
-        saveFeed(userId, postRanks);
+    fun generateFeed(userId: Int) {
+        val postRanks = buildAndGetNewFeed(userId)
+        saveFeed(userId, postRanks)
     }
 
-    public ArrayList<PostRank> buildAndGetNewFeed(Integer userId) {
-        UserDTO userDTO = userService.generateUserDTOByUserId(userId);
-        List<Post> posts = postRepository.findAllTopLevelPosts();
-        ArrayList<PostRank> postRanks = generatePostRankList(posts);
-        computeTotalScore(postRanks, userDTO);
-        postRanks.sort((a, b) -> Double.compare(b.totalScore, a.totalScore));
-        return postRanks;
+    fun buildAndGetNewFeed(userId: Int): List<PostRank> {
+        val userDTO = userService.generateUserDTOByUserId(userId)
+        val posts = postRepository.findAllTopLevelPosts()
+        val postRanks = EdgeRankUtils.generatePostRankList(posts)
+        computeTotalScore(postRanks, userDTO)
+        return postRanks.sortedByDescending { it.totalScore }
     }
 
 
     @Transactional
-    public void saveFeed(Integer userId, ArrayList<PostRank> feed) {
-        feedEntryRepository.deleteByUserId(userId);
-        ArrayList<FeedEntry> feedEntries = generateFeedEntriesList(userId, feed);
-        feedEntryRepository.saveAll(feedEntries);
+    fun saveFeed(userId: Int, feed: List<PostRank>) {
+        feedEntryRepository.deleteByUserId(userId)
+        val feedEntries = EdgeRankUtils.generateFeedEntriesList(userId, feed)
+        feedEntryRepository.saveAll(feedEntries)
     }
 
-    private void computeTotalScore (ArrayList<PostRank> postranks, UserDTO feedUser) {
-        for (PostRank postRank : postranks) {
-
+    private fun computeTotalScore(postRanks: ArrayList<PostRank>, feedUser: UserDTO) {
+        for (postRank in postRanks) {
             if (!calculateIfOwnRecentPost(postRank, feedUser)) {
-                computeAffinity(postRank, feedUser);
-                computeWeights(postRank);
+                computeAffinity(postRank, feedUser)
+                computeWeights(postRank)
             }
-            computeTimeDecayValue(postRank);
-            postRank.computeTotalScore();
+            computeTimeDecayValue(postRank)
+            postRank.computeTotalScore()
         }
     }
 
-    private void computeTimeDecayValue (PostRank postRank) {
-        postRank.timeDecay += computeTimeDecay(postRank.post);
+    private fun computeTimeDecayValue(postRank: PostRank) {
+        postRank.timeDecay += computeTimeDecay(postRank.post)
     }
 
-    private void computeAffinity (PostRank postToRank, UserDTO feedUser) {
+    private fun computeAffinity(postToRank: PostRank, feedUser: UserDTO) {
+        val postIdsByOther: List<Int> = postRepository.findPostIdsByAuthor(postToRank.post.userId)
+        val postIdsByOtherSet: Set<Int> = postIdsByOther.toHashSet()
 
-        List<Integer> postIdsByOther = postRepository.findPostIdsByAuthor(postToRank.post.getUserId());
-        Set<Integer> postIdsByOtherSet = new HashSet<>(postIdsByOther);
-
-        postToRank.affinity += computeFollowingAffinity(feedUser, postToRank.post.getUserId());
-        postToRank.affinity += computeHasLikedAffinity(feedUser, postIdsByOtherSet);
-        postToRank.affinity += computeHasRepliedAffinity(feedUser, postIdsByOtherSet);
-
+        postToRank.affinity += computeFollowingAffinity(feedUser, postToRank.post.userId)
+        postToRank.affinity += computeHasLikedAffinity(feedUser, postIdsByOtherSet)
+        postToRank.affinity += computeHasRepliedAffinity(feedUser, postIdsByOtherSet)
     }
 
-    private void computeWeights (PostRank postToRank) {
-
-        postToRank.weight += computeHasMediaAffinity(postToRank);
-        postToRank.weight += computeLikeWeights(postToRank);
-
+    private fun computeWeights(postToRank: PostRank) {
+        postToRank.weight += computeHasMediaAffinity(postToRank)
+        postToRank.weight += computeLikeWeights(postToRank)
     }
 
-    private float computeHasMediaAffinity (PostRank postToRank) {
-        if (postMediaRepository.findAllByPostId(postToRank.post.getId()).isEmpty()) {
-            return 0;
-        } else {
-            return 0.4f;
-        }
+    private fun computeHasMediaAffinity(postToRank: PostRank): Float {
+        val media = postMediaRepository.findAllByPostId(postToRank.post.id)
+        return if (media.isEmpty()) 0f else 0.4f
     }
 
-    private boolean calculateIfOwnRecentPost (PostRank postRank, UserDTO feedUser) {
-        boolean isOwnRecentPost = postRank.post.getUserId().equals(feedUser.id) && ChronoUnit.HOURS.between(postRank.post.getCreatedAt().toLocalDateTime(), LocalDateTime.now()) <= 6;
+    private fun calculateIfOwnRecentPost(postRank: PostRank, feedUser: UserDTO): Boolean {
+        val isOwnRecentPost =
+            postRank.post.userId == feedUser.id &&
+                    ChronoUnit.HOURS.between(postRank.post.createdAt.toLocalDateTime(), LocalDateTime.now()) <= 6
+
         if (isOwnRecentPost) {
-            postRank.affinity += (2000 + postRank.post.getId());
-            postRank.weight += (2000 + postRank.post.getId());
-            return true;
+            val boost = 2000 + postRank.post.id
+            postRank.affinity += boost
+            postRank.weight += boost
+            return true
         }
-        return false;
+
+        return false
     }
 
-    private float computeLikeWeights (PostRank postToRank) {
-        ArrayList <Like> likes = likeRepository.findAllByLikedPostId(postToRank.post.getId());
-        return (float) Math.log(likes.size() + 1);
+    private fun computeLikeWeights(postToRank: PostRank): Float {
+        val likes: List<Like> = likeRepository.findAllByLikedPostId(postToRank.post.id)
+        return kotlin.math.ln((likes.size + 1).toDouble()).toFloat()
     }
 
-    private double computeTimeDecay(Post post) {
-        LocalDateTime createdAt = post.getCreatedAt().toLocalDateTime();
-        long hoursSince = ChronoUnit.HOURS.between(createdAt, LocalDateTime.now());
-        return 1.0 / Math.pow(hoursSince + 1, 4.0);
+    private fun computeTimeDecay(post: Post): Double {
+        val createdAt: LocalDateTime = post.createdAt.toLocalDateTime()
+        val hoursSince: Long = ChronoUnit.HOURS.between(createdAt, LocalDateTime.now())
+        return 1.0 / (hoursSince + 1.0).pow(4.0)
     }
 
-    private float computeFollowingAffinity (UserDTO feedUser, Integer postOwnerId) {
-        if (feedUser.following.contains(postOwnerId)) {
-            return 2;
-        } else {
-            return 1f;
-        }
+    private fun computeFollowingAffinity(feedUser: UserDTO, postOwnerId: Int): Float {
+        return if (feedUser.following.contains(postOwnerId)) 2f else 1f
     }
 
-    private float computeHasLikedAffinity (UserDTO feedUser, Set<Integer> postIdsByOtherSet) {
-        if (feedUser.likedPosts.stream().anyMatch(postIdsByOtherSet::contains)) {
-            return 0.5f;
-        } else {
-            return 0f;
-        }
+    private fun computeHasLikedAffinity(feedUser: UserDTO, postIdsByOtherSet: Set<Int>): Float {
+        return if (feedUser.likedPosts.any { it in postIdsByOtherSet }) 0.5f else 0f
     }
 
-    private float computeHasRepliedAffinity (UserDTO feedUser, Set<Integer> postIdsByOtherSet) {
-        if (feedUser.replies.stream().anyMatch(postIdsByOtherSet::contains)) {
-            return 0.5f;
-        } else {
-            return 0f;
-        }
+    private fun computeHasRepliedAffinity(feedUser: UserDTO, postIdsByOtherSet: Set<Int>): Float {
+        return if (feedUser.replies.any { it in postIdsByOtherSet }) 0.5f else 0f
     }
-
-
 
 
 }

@@ -2,7 +2,6 @@ package com.xclone.xclone.domain.post;
 
 import com.xclone.xclone.domain.bookmark.Bookmark;
 import com.xclone.xclone.domain.bookmark.infra.repository.BookmarkRepository;
-import com.xclone.xclone.domain.feed.EdgeRank;
 import com.xclone.xclone.domain.post.poll.Poll;
 import com.xclone.xclone.domain.post.poll.PollsRepository;
 import com.xclone.xclone.storage.CloudStorageService;
@@ -35,10 +34,10 @@ public class PostService {
     private final NotificationService notificationService;
     private final RetweetRepository retweetRepository;
     private final PostMediaRepository postMediaRepository;
-    private final EdgeRank edgeRank;
+    private final EdgeRanke edgeRank;
 
     @Autowired
-    public PostService(PostRepository postRepository, LikeRepository likeRepository, BookmarkRepository bookmarkRepository, NotificationService notificationService, RetweetRepository retweetRepository, PostMediaRepository postMediaRepository, EdgeRank edgeRank, CloudStorageService cloudStorageService, UserRepository userRepository, PollsRepository pollsRepository) {
+    public PostService(PostRepository postRepository, LikeRepository likeRepository, BookmarkRepository bookmarkRepository, NotificationService notificationService, RetweetRepository retweetRepository, PostMediaRepository postMediaRepository, EdgeRanke edgeRank, CloudStorageService cloudStorageService, UserRepository userRepository, PollsRepository pollsRepository) {
         this.postRepository = postRepository;
         this.likeRepository = likeRepository;
         this.bookmarkRepository = bookmarkRepository;

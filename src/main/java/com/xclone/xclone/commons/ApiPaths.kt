@@ -42,7 +42,11 @@ object ApiPaths {
         const val GET_ADMIN = "/getAdminUser"
         const val SEARCH = "/search"
         const val GET_DISCOVER = "/get-discover"
+    }
 
+    object FEED {
+        const val BASE = "$API_PREFIX/feed"
+        const val GET_PAGE = "/get-feed-page"
     }
 
 

@@ -1,35 +1,34 @@
-package com.xclone.xclone.domain.feed;
+package com.xclone.xclone.domain.feed
 
-import com.xclone.xclone.domain.post.PostMedia;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 
-import java.util.List;
 
-public interface FeedEntryRepository extends JpaRepository<FeedEntry, Integer> {
+interface FeedEntryRepository : JpaRepository<FeedEntry, Int> {
 
-    List<FeedEntry> findByUserIdOrderByPositionAsc(Integer userId);
+    fun findByUserIdOrderByPositionAsc(userId: Int): List<FeedEntry>
 
-    @Query("""
-SELECT f.postId
-FROM FeedEntry f
-WHERE f.userId = :userId AND f.position >= :cursor
-ORDER BY f.position ASC
-""")
-    List<Integer> getFeedPostIdsCustom(
-            @Param("userId") Integer userId,
-            @Param("cursor") long cursor,
-            Pageable pageable
-    );
+    @Query(
+        """
+        SELECT f.postId
+        FROM FeedEntry f
+        WHERE f.userId = :userId AND f.position >= :cursor
+        ORDER BY f.position ASC
+        """
+    )
+    fun getFeedPostIdsCustom(
+        @Param("userId") userId: Int,
+        @Param("cursor") cursor: Long,
+        pageable: Pageable
+    ): List<Int>
 
-    void deleteByUserId(Integer userId);
+    fun deleteByUserId(userId: Int)
 
-    List<FeedEntry> findAllByUserId(Integer userId);
+    fun findAllByUserId(userId: Int): List<FeedEntry>
 
-    FeedEntry findByPostId(Integer postId);
+    fun findByPostId(postId: Int): FeedEntry?
 
-    FeedEntry findByPostIdAndUserId(Integer postId, Integer userId);
+    fun findByPostIdAndUserId(postId: Int, userId: Int): FeedEntry?
 }

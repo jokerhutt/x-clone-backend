@@ -1,60 +1,24 @@
-package com.xclone.xclone.domain.feed;
+package com.xclone.xclone.domain.feed
 
-import jakarta.persistence.*;
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "feed_entry")
+class FeedEntry {
 
-public class FeedEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    var id: Long? = null
 
-    @Column(name = "user_id")
-    private Integer userId;
+    @Column(name = "user_id", nullable = false)
+    var userId: Int = 0
 
-    @Column(name = "post_id")
-    private Integer postId;
-    private Double score;
-    private Integer position;
+    @Column(name = "post_id", nullable = false)
+    var postId: Int = 0
 
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "score")
+    var score: Double? = null
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getPostId() {
-        return postId;
-    }
-
-    public void setPostId(Integer postId) {
-        this.postId = postId;
-    }
-
-    public Double getScore() {
-        return score;
-    }
-
-    public void setScore(Double score) {
-        this.score = score;
-    }
-
-    public Integer getPosition() {
-        return position;
-    }
-
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
+    @Column(name = "position")
+    var position: Int? = null
 }

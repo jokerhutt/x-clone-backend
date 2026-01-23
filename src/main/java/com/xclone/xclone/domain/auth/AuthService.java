@@ -1,6 +1,5 @@
 package com.xclone.xclone.domain.auth;
 
-import com.xclone.xclone.domain.feed.EdgeRank;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +16,11 @@ import static com.xclone.xclone.util.UserIdentityUtils.*;
 @Service
 public class AuthService {
 
-    private final EdgeRank edgeRank;
+    private final EdgeRanke edgeRank;
     UserRepository userRepository;
 
     @Autowired
-    public AuthService(UserRepository userRepository, EdgeRank edgeRank) {
+    public AuthService(UserRepository userRepository, EdgeRanke edgeRank) {
         this.userRepository = userRepository;
         this.edgeRank = edgeRank;
     }
