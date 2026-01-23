@@ -76,17 +76,17 @@ class EdgeRank(
     }
 
     private fun computeHasMediaAffinity(postToRank: PostRank): Float {
-        val media = postMediaRepository.findAllByPostId(postToRank.post.id)
+        val media = postMediaRepository.findAllByPostId(postToRank.post.id!!)
         return if (media.isEmpty()) 0f else 0.4f
     }
 
     private fun calculateIfOwnRecentPost(postRank: PostRank, feedUser: UserDTO): Boolean {
         val isOwnRecentPost =
             postRank.post.userId == feedUser.id &&
-                    ChronoUnit.HOURS.between(postRank.post.createdAt.toLocalDateTime(), LocalDateTime.now()) <= 6
+                    ChronoUnit.HOURS.between(postRank.post.createdAt!!.toLocalDateTime(), LocalDateTime.now()) <= 6
 
         if (isOwnRecentPost) {
-            val boost = 2000 + postRank.post.id
+            val boost = 2000 + postRank.post.id!!
             postRank.affinity += boost
             postRank.weight += boost
             return true
@@ -96,12 +96,12 @@ class EdgeRank(
     }
 
     private fun computeLikeWeights(postToRank: PostRank): Float {
-        val likes: List<Like> = likeRepository.findAllByLikedPostId(postToRank.post.id)
+        val likes: List<Like> = likeRepository.findAllByLikedPostId(postToRank.post.id!!)
         return kotlin.math.ln((likes.size + 1).toDouble()).toFloat()
     }
 
     private fun computeTimeDecay(post: Post): Double {
-        val createdAt: LocalDateTime = post.createdAt.toLocalDateTime()
+        val createdAt: LocalDateTime = post.createdAt!!.toLocalDateTime()
         val hoursSince: Long = ChronoUnit.HOURS.between(createdAt, LocalDateTime.now())
         return 1.0 / (hoursSince + 1.0).pow(4.0)
     }

@@ -37,6 +37,7 @@ class FollowService(
     fun deleteFollow(followerId: Int, followedId: Int) : UserDTO {
         val toDelete = followRepository.findByFollowedIdAndFollowerId(followerId, followedId)
             .orElseThrow { ApiException(ErrorCode.NO_FOLLOW) }
+        followRepository.delete(toDelete)
         notificationService.deleteNotificationFromType(followerId, followedId, "follow")
         return userService.generateUserDTOByUserId(followedId)
     }
@@ -44,4 +45,3 @@ class FollowService(
     }
 
 
-}
