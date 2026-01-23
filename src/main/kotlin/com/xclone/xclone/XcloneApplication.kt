@@ -1,13 +1,12 @@
-package com.xclone.xclone;
+package com.xclone.xclone
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 
 @SpringBootApplication
-public class XcloneApplication {
+class XcloneApplication
 
-    public static void main(String[] args) {
-        SpringApplication.run(XcloneApplication.class, args);
-    }
-
+fun main(args: Array<String>) {
+    runApplication<XcloneApplication>(*args)
 }
