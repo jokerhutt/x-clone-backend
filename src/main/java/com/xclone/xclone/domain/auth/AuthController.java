@@ -1,7 +1,5 @@
 package com.xclone.xclone.domain.auth;
 
-import com.xclone.xclone.domain.user.User;
-import com.xclone.xclone.domain.user.UserDTO;
 import com.xclone.xclone.domain.user.UserService;
 import com.xclone.xclone.security.JwtService;
 import org.springframework.http.HttpStatus;

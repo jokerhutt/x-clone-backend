@@ -1,18 +1,10 @@
 package com.xclone.xclone.domain.auth;
 
-import com.xclone.xclone.constants.BANNED;
 import com.xclone.xclone.domain.feed.EdgeRank;
-import com.xclone.xclone.domain.user.User;
-import com.xclone.xclone.domain.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Map;

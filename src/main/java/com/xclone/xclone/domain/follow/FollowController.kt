@@ -1,50 +1,33 @@
-package com.xclone.xclone.domain.follow;
-
-import com.xclone.xclone.domain.bookmark.BookmarkService;
-import com.xclone.xclone.domain.user.UserDTO;
-import com.xclone.xclone.domain.user.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
+package com.xclone.xclone.domain.follow
+import com.xclone.xclone.commons.ApiPaths
+import com.xclone.xclone.domain.user.UserDTO
+import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
+import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/follows")
-public class FollowController {
+@RequestMapping(ApiPaths.FOLLOWS.BASE)
+class FollowController(
+    private val followService: FollowService,
+) {
 
-    private final FollowService followService;
-    private final UserService userService;
-
-    public FollowController(FollowService followService, UserService userService) {
-        this.followService = followService;
-        this.userService = userService;
+    @PostMapping(ApiPaths.FOLLOWS.CREATE)
+    fun createFollow(
+        @RequestBody newFollow: NewFollow,
+        auth: Authentication
+    ): ResponseEntity<UserDTO> {
+        val authUserId = auth.principal as Int
+        val followedUserToReturn = followService.addNewFollow(authUserId, newFollow.followedId)
+        return ResponseEntity.ok(followedUserToReturn)
     }
 
-    @PostMapping("/follow")
-    public ResponseEntity<?> createFollow (@RequestBody NewFollow newFollow, Authentication auth) {
-        Integer authUserId = (Integer) auth.getPrincipal();
-        try {
-            UserDTO followedUserToReturn = followService.addNewFollow(authUserId, newFollow.followedId);
-            return ResponseEntity.ok(followedUserToReturn);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
-        }
+    @PostMapping(ApiPaths.FOLLOWS.DELETE)
+    fun unfollowUser(
+        @RequestBody newFollow: NewFollow,
+        auth: Authentication
+    ): ResponseEntity<UserDTO> {
+        val authUserId = auth.principal as Int
+        val followedUserToReturn = followService.deleteFollow(authUserId, newFollow.followedId)
+        return ResponseEntity.ok(followedUserToReturn)
     }
-
-    @PostMapping("/unfollow")
-    public ResponseEntity<?> unfollowUser (@RequestBody NewFollow newFollow, Authentication auth) {
-        Integer authUserId = (Integer) auth.getPrincipal();
-        try {
-            UserDTO followedUserToReturn = followService.deleteFollow(authUserId, newFollow.followedId);
-            return ResponseEntity.ok(followedUserToReturn);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        }
-    }
-
-
-
-
 }

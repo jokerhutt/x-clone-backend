@@ -1,10 +1,8 @@
 package com.xclone.xclone;
 
-import com.xclone.xclone.domain.bookmark.BookmarkRepository;
 import com.xclone.xclone.domain.post.PostDTOMapper;
 import com.xclone.xclone.domain.post.PostRepository;
 import com.xclone.xclone.domain.post.PostService;
-import com.xclone.xclone.domain.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;

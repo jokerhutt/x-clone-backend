@@ -1,16 +1,23 @@
-package com.xclone.xclone.domain.retweet;
+package com.xclone.xclone.domain.retweet
 
-import com.xclone.xclone.domain.post.Post;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 
-import java.util.ArrayList;
+interface RetweetRepository : JpaRepository<Retweet, Int> {
 
-public interface RetweetRepository extends JpaRepository<Retweet, Integer> {
-    ArrayList<Retweet> findAllByRetweeterId(Integer retweeterId);
+    fun findAllByRetweeterId(retweeterId: Int): List<Retweet>
 
-    boolean existsByRetweeterIdAndReferenceId(Integer retweeterId, Integer referenceId);
+    fun existsByRetweeterIdAndReferenceId(retweeterId: Int, referenceId: Int): Boolean
 
-    Retweet findByRetweeterIdAndReferenceId(Integer retweeterId, Integer referenceId);
+    fun findByRetweeterIdAndReferenceId(retweeterId: Int, referenceId: Int): Retweet?
 
-    ArrayList<Retweet> findAllByReferenceId(Integer referenceId);
+    fun findAllByReferenceId(referenceId: Int): List<Retweet>
+
+    @Query("select r.referenceId from Retweet r where r.retweeterId = :retweeterId")
+    fun findAllReferenceIdsByRetweeterId(@Param("retweeterId") retweeterId: Int): List<Int>
+
+    @Query("select r.retweeterId from Retweet r where r.referenceId = :postId")
+    fun findAllRetweeterIdsByPostId(@Param("postId") postId: Int): List<Int>
+
 }

@@ -1,42 +1,24 @@
-package com.xclone.xclone.domain.follow;
+package com.xclone.xclone.domain.follow
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "follows")
-public class Follow {
+class Follow(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id", nullable = false, updatable = false)
+    var id: Int? = null,
 
-    @Column(name = "followed_id")
-    private Integer followedId;
+    @Column(name = "followed_id", nullable = false)
+    var followedId: Int,
 
-    @Column(name = "follower_id")
-    private Integer followerId;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getFollowedId() {
-        return followedId;
-    }
-
-    public void setFollowedId(Integer followedId) {
-        this.followedId = followedId;
-    }
-
-    public Integer getFollowerId() {
-        return followerId;
-    }
-
-    public void setFollowerId(Integer followerId) {
-        this.followerId = followerId;
-    }
-}
+    @Column(name = "follower_id", nullable = false)
+    var followerId: Int
+)

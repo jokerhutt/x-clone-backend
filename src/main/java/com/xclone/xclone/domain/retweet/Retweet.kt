@@ -1,63 +1,27 @@
-package com.xclone.xclone.domain.retweet;
+package com.xclone.xclone.domain.retweet
 
-import jakarta.persistence.*;
-
-import java.sql.Timestamp;
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 
 @Entity
-@Table (name = "retweets")
-public class Retweet {
+@Table(name = "retweets")
+class Retweet(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id", nullable = false, updatable = false)
+    var id: Int? = null,
 
-    @Column(name = "reference_Id")
-    private Integer referenceId;
+    @Column(name = "reference_id", nullable = false)
+    var referenceId: Int,
 
-    @Column(name = "retweeter_id")
-    private Integer retweeterId;
+    @Column(name = "retweeter_id", nullable = false)
+    var retweeterId: Int,
 
-    @Column(name = "type")
-    private String type;
-
-    @Column(name = "created_at", updatable = false, insertable = false)
-    private Timestamp createdAt;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getReferenceId() {
-        return referenceId;
-    }
-
-    public void setReferenceId(Integer referenceId) {
-        this.referenceId = referenceId;
-    }
-
-    public Integer getRetweeterId() {
-        return retweeterId;
-    }
-
-    public void setRetweeterId(Integer retweeterId) {
-        this.retweeterId = retweeterId;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-}
+    @Column(name = "type", nullable = false)
+    var type: String
+)

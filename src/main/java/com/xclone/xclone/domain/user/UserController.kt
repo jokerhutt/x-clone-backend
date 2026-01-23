@@ -1,67 +1,56 @@
-package com.xclone.xclone.domain.user;
+package com.xclone.xclone.domain.user
 
-import com.xclone.xclone.domain.post.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.xclone.xclone.commons.ApiPaths
+import com.xclone.xclone.domain.post.PostService
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/users")
-public class UserController {
-    private final UserService userService;
-    private final PostService postService;
-    private final UserRepository userRepository;
+@RequestMapping(ApiPaths.USERS.BASE)
+class UserController(
+    private val userService: UserService,
+    private val postService: PostService,
+    private val userRepository: UserRepository
+) {
 
-    @Autowired
-    public UserController(UserService userService, PostService postService, UserRepository userRepository) {
-        this.userService = userService;
-        this.postService = postService;
-        this.userRepository = userRepository;
+    @GetMapping(ApiPaths.USERS.GET)
+    fun getUserById(@RequestParam id: Int): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok(userService.generateUserDTOByUserId(id))
     }
 
-    @GetMapping("/get-user")
-    public ResponseEntity<?> getUserById(@RequestParam Integer id) {
-        return ResponseEntity.ok(userService.generateUserDTOByUserId(id));
+    @PostMapping(ApiPaths.USERS.GET_USERS)
+    fun getUsers(@RequestBody ids: List<Int>): ResponseEntity<List<UserDTO>> {
+        return ResponseEntity.ok(userService.findAllUserDTOByIds(ids))
     }
 
-    @PostMapping("/get-users")
-    public ResponseEntity<?> getUsers(@RequestBody ArrayList<Integer> ids) {
-        return ResponseEntity.ok(userService.findAllUserDTOByIds(ids));
+    @GetMapping(ApiPaths.USERS.TOP_FIVE)
+    fun getTopFiveUsers(): ResponseEntity<List<Int>> {
+        return ResponseEntity.ok(userRepository.findUserIdsByFollowerCount(99999, 4))
     }
 
-
-    @GetMapping("/get-top-five")
-    public ResponseEntity<?> getTopFiveUsers() {
-        return ResponseEntity.ok(userRepository.findUserIdsByFollowerCount(99999, 4));
+    @GetMapping(ApiPaths.USERS.GET_ADMIN)
+    fun getUser(@RequestParam id: Int): ResponseEntity<UserDTO> {
+        println("Booyah $id")
+        userService.generateFeed(id)
+        return ResponseEntity.ok(userService.generateUserDTOByUserId(id))
     }
 
-    @GetMapping("/getAdminUser")
-    public ResponseEntity<UserDTO> getUser(@RequestParam Integer id) {
-        System.out.println("Booyah " + id);
-        userService.generateFeed(id);
-        return ResponseEntity.ok(userService.generateUserDTOByUserId(id));
+    @GetMapping(ApiPaths.USERS.SEARCH)
+    fun searchUsers(@RequestParam q: String): List<Int> {
+        return userService.searchUsersByName(q)
     }
 
-    @GetMapping("/search")
-    public List<Integer> searchUsers(@RequestParam String q) {
-        return userService.searchUsersByName(q);
+    @GetMapping(ApiPaths.USERS.GET_DISCOVER)
+    fun getFeedPage(
+        @RequestParam(defaultValue = "0") cursor: Long,
+        @RequestParam(defaultValue = "10") limit: Int
+    ): ResponseEntity<Any> {
+        println("Received request for cursor: $cursor limit $limit")
+        return ResponseEntity.ok(userService.getPaginatedTopUsers(cursor, limit))
     }
-
-    @GetMapping("/get-discover")
-    public ResponseEntity<?> getFeedPage(
-            @RequestParam(defaultValue = "0") long cursor,
-            @RequestParam(defaultValue = "10") int limit
-    ) {
-        System.out.println("Received request for cursor: " + cursor + " limit " + limit);
-        return ResponseEntity.ok(userService.getPaginatedTopUsers(cursor, limit));
-    }
-
-
-
 }

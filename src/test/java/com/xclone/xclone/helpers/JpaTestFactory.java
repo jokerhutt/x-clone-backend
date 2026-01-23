@@ -2,7 +2,6 @@ package com.xclone.xclone.helpers;
 
 import com.xclone.xclone.domain.bookmark.Bookmark;
 import com.xclone.xclone.domain.post.Post;
-import com.xclone.xclone.domain.user.User;
 import com.xclone.xclone.utils.TestConstants;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;

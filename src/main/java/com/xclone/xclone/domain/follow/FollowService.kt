@@ -1,59 +1,47 @@
-package com.xclone.xclone.domain.follow;
+package com.xclone.xclone.domain.follow
 
-import com.xclone.xclone.domain.notification.NotificationService;
-import com.xclone.xclone.domain.user.UserDTO;
-import com.xclone.xclone.domain.user.UserService;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Optional;
+import com.xclone.xclone.commons.exception.ApiException
+import com.xclone.xclone.commons.exception.ErrorCode
+import com.xclone.xclone.domain.notification.NotificationService
+import com.xclone.xclone.domain.user.UserService
+import com.xclone.xclone.domain.user.UserDTO
+import jakarta.transaction.Transactional
+import org.springframework.stereotype.Service
 
 @Service
-public class FollowService {
-
-    private final NotificationService notificationService;
-    private final UserService userService;
-    private FollowRepository followRepository;
-
-    @Autowired
-    public FollowService(FollowRepository followRepository, NotificationService notificationService, UserService userService) {
-        this.followRepository = followRepository;
-        this.notificationService = notificationService;
-        this.userService = userService;
-    }
+class FollowService(
+    private val followRepository: FollowRepository,
+    private val notificationService: NotificationService,
+    private val userService: UserService
+) {
 
     @Transactional
-    public UserDTO addNewFollow (Integer followerId, Integer followedId) {
+    fun addNewFollow (followerId: Int, followedId: Int) : UserDTO {
 
-        if (followRepository.existsByFollowedIdAndFollowerId(followedId, followerId)) {
-            throw new IllegalStateException("Follow exists");
+        if (followRepository.existsByFollowedIdAndFollowerId(followerId, followedId)) {
+            throw ApiException(ErrorCode.FOLLOW_EXISTS)
         }
 
-        Follow follow = new Follow();
-        follow.setFollowerId(followerId);
-        follow.setFollowedId(followedId);
+        val newFollow = Follow(
+            followerId = followerId,
+            followedId = followedId
+        )
 
-        followRepository.save(follow);
-        notificationService.createNotificationFromType(followerId, followedId, "follow");
+        followRepository.save(newFollow)
+        notificationService.createNotificationFromType(followerId, followedId, "follow")
 
-        return userService.generateUserDTOByUserId(followedId);
+        return userService.generateUserDTOByUserId(followedId)
 
     }
-
     @Transactional
-    public UserDTO deleteFollow(Integer followerId, Integer followedId) {
-        Optional<Follow> toDeleteFollow = followRepository.findByFollowedIdAndFollowerId(followedId, followerId);
-        if (toDeleteFollow.isPresent()) {
-            followRepository.delete(toDeleteFollow.get());
-            notificationService.deleteNotificationFromType(followerId, followedId, "follow");
-            return userService.generateUserDTOByUserId(followedId);
-        } else {
-            throw new IllegalStateException("Follow does not exist");
-        }
+    fun deleteFollow(followerId: Int, followedId: Int) : UserDTO {
+        val toDelete = followRepository.findByFollowedIdAndFollowerId(followerId, followedId)
+            .orElseThrow { ApiException(ErrorCode.NO_FOLLOW) }
+        notificationService.deleteNotificationFromType(followerId, followedId, "follow")
+        return userService.generateUserDTOByUserId(followedId)
     }
 
+    }
 
 
 }

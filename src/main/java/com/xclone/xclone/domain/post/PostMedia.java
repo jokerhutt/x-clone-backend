@@ -14,7 +14,7 @@ public class PostMedia {
     private Integer postId;
     private String fileName;
     private String mimeType;
-    private String url; // ✅ New field instead of byte[]
+    private String url;
 
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
@@ -31,7 +31,7 @@ public class PostMedia {
     public Integer getPostId() { return postId; }
     public String getFileName() { return fileName; }
     public String getMimeType() { return mimeType; }
-    public String getUrl() { return url; } // ✅ new getter
+    public String getUrl() { return url; }
     public Timestamp getCreatedAt() { return createdAt; }
 
     public void setId(Integer id) {

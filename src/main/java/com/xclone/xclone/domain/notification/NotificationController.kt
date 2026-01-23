@@ -1,31 +1,27 @@
-package com.xclone.xclone.domain.notification;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+package com.xclone.xclone.domain.notification
 
-import java.util.ArrayList;
+import com.xclone.xclone.commons.ApiPaths
+import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
+import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/notifications")
-public class NotificationController {
+@RequestMapping(ApiPaths.NOTIFICATIONS.BASE)
+class NotificationController(
+    private val notificationService: NotificationService
+) {
 
-    private final NotificationService notificationService;
-
-    public NotificationController(NotificationService notificationService) {
-        this.notificationService = notificationService;
+    @GetMapping(ApiPaths.NOTIFICATIONS.GET)
+    fun getUsersUnseenNotifications(auth: Authentication): ResponseEntity<Any> {
+        val authUserId = auth.principal as Int
+        return ResponseEntity.ok(
+            notificationService.getUsersUnseenIdsAndMarkAllAsSeen(authUserId)
+        )
     }
 
-    @GetMapping("/get-unseen")
-    public ResponseEntity<?> getUsersUnseenNotifications(Authentication auth) {
-        Integer authUserId = (Integer) auth.getPrincipal();
-        return ResponseEntity.ok(notificationService.getUsersUnseenIdsAndMarkAllAsSeen(authUserId));
+    @PostMapping(ApiPaths.NOTIFICATIONS.GET_UNSEEN)
+    fun getNotifications(@RequestBody ids: List<Int>): ResponseEntity<Any> {
+        println("Received request to retrieve notifications")
+        return ResponseEntity.ok(notificationService.findAllNotificationDTOsById(ids))
     }
-
-    @PostMapping("/get-notifications")
-    public ResponseEntity<?> getNotifications(@RequestBody ArrayList<Integer> ids) {
-        System.out.println("Received request to retrieve notifications");
-        return ResponseEntity.ok(notificationService.findAllNotificationDTOsById(ids));
-    }
-
 }

@@ -3,7 +3,6 @@ package com.xclone.xclone.domain.bookmark;
 import com.xclone.xclone.AbstractServiceTest;
 import com.xclone.xclone.domain.post.Post;
 import com.xclone.xclone.domain.post.PostDTO;
-import com.xclone.xclone.domain.user.User;
 import com.xclone.xclone.helpers.ServiceLayerHelper;
 import com.xclone.xclone.utils.TestConstants;
 import org.junit.jupiter.api.BeforeEach;

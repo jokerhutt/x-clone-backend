@@ -1,12 +1,6 @@
 package com.xclone.xclone.domain.feed;
 
-import com.xclone.xclone.domain.bookmark.BookmarkRepository;
-import com.xclone.xclone.domain.like.LikeRepository;
-import com.xclone.xclone.domain.notification.Notification;
-import com.xclone.xclone.domain.notification.NotificationRepository;
 import com.xclone.xclone.domain.post.*;
-import com.xclone.xclone.domain.user.UserDTO;
-import com.xclone.xclone.domain.user.UserRepository;
 import com.xclone.xclone.domain.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

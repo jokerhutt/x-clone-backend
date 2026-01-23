@@ -1,55 +1,27 @@
 package com.xclone.xclone.domain.bookmark;
-
-import jakarta.persistence.*;
-
-import java.sql.Timestamp;
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Table
+import java.sql.Timestamp
 
 @Entity
-@Table (name = "bookmarks")
-public class Bookmark {
+@Table(name = "bookmarks")
+class Bookmark(
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "id", nullable = false, updatable = false)
+        var id: Int? = null,
 
-    @Column(name = "bookmarked_by")
-    private Integer bookmarkedBy;
+        @Column(name = "bookmarked_by", nullable = false)
+        var bookmarkedBy: Int,
 
-    @Column(name = "bookmarked_post")
-    private Integer bookmarkedPost;
+        @Column(name = "bookmarked_post", nullable = false)
+        var bookmarkedPost: Int,
 
-    @Column(name = "created_at", updatable = false, insertable = true)
-    private Timestamp createdAt;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getBookmarkedBy() {
-        return bookmarkedBy;
-    }
-
-    public void setBookmarkedBy(Integer bookmarkedBy) {
-        this.bookmarkedBy = bookmarkedBy;
-    }
-
-    public Integer getBookmarkedPost() {
-        return bookmarkedPost;
-    }
-
-    public void setBookmarkedPost(Integer bookmarkedPost) {
-        this.bookmarkedPost = bookmarkedPost;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-}
+        @Column(name = "created_at", updatable = false, insertable = true)
+        var createdAt: Timestamp? = null
+)

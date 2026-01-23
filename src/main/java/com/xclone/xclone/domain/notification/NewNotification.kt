@@ -1,12 +1,9 @@
-package com.xclone.xclone.domain.notification;
+package com.xclone.xclone.domain.notification
 
-public class NewNotification {
-
-    public Integer senderId;
-    public Integer receiverId;
-    public Integer referenceId;
-    public String type;
-    public String text;
-
-
-}
+data class NewNotification(
+    val senderId: Int,
+    val receiverId: Int,
+    val referenceId: Int,
+    val type: String,
+    val text: String
+)

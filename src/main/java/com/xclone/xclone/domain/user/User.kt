@@ -1,143 +1,52 @@
-package com.xclone.xclone.domain.user;
+package com.xclone.xclone.domain.user
 
-import jakarta.persistence.*;
-
-import java.sql.Timestamp;
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Table
+import java.sql.Timestamp
 
 @Entity
 @Table(name = "users")
-public class User {
+class User(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id", nullable = false, updatable = false)
+    var id: Int? = null,
 
-    @Column(nullable = false, unique = true, length = 64, name = "name")
-    private String username;
+    @Column(name = "name", nullable = false, unique = true, length = 64)
+    var username: String,
 
-    @Column(length = 400)
-    private String password;
+    @Column(name = "password", length = 400)
+    var password: String? = null,
 
     @Column(name = "google_id", unique = true)
-    private String googleId;
+    var googleId: String? = null,
 
-    @Column(nullable = false, unique = true, length = 45)
-    private String email;
+    @Column(name = "email", nullable = false, unique = true, length = 45)
+    var email: String,
 
-    @Column(nullable = false, length = 45, name = "display_name")
-    private String displayName;
+    @Column(name = "display_name", nullable = false, length = 45)
+    var displayName: String,
 
     @Column(name = "profile_picture_url")
-    private String profilePictureUrl;
+    var profilePictureUrl: String? = null,
 
     @Column(name = "banner_image_url")
-    private String bannerImageUrl;
+    var bannerImageUrl: String? = null,
 
     @Column(name = "verified")
-    private Boolean verified;
+    var verified: Boolean? = false,
 
-    @Column(length = 180)
-    private String bio;
+    @Column(name = "bio", length = 180)
+    var bio: String? = null,
 
     @Column(name = "created_at", updatable = false, insertable = false)
-    private Timestamp createdAt;
+    var createdAt: Timestamp? = null,
 
     @Column(name = "pinned_post_id")
-    private Integer pinnedPostId;
-
-    public Boolean getVerified() {
-        return verified;
-    }
-
-    public void setVerified(Boolean verified) {
-        this.verified = verified;
-    }
-
-    public String getGoogleId() {
-        return googleId;
-    }
-
-    public void setGoogleId(String googleId) {
-        this.googleId = googleId;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public Integer getPinnedPostId() {
-        return pinnedPostId;
-    }
-
-    public void setPinnedPostId(Integer pinnedPostId) {
-        this.pinnedPostId = pinnedPostId;
-    }
-
-    public String getProfilePictureUrl() {
-        return profilePictureUrl;
-    }
-
-    public void setProfilePictureUrl(String profilePictureUrl) {
-        this.profilePictureUrl = profilePictureUrl;
-    }
-
-    public String getBannerImageUrl() {
-        return bannerImageUrl;
-    }
-
-    public void setBannerImageUrl(String bannerImageUrl) {
-        this.bannerImageUrl = bannerImageUrl;
-    }
-}
+    var pinnedPostId: Int? = null
+)

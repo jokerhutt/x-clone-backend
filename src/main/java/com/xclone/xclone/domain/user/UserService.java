@@ -1,13 +1,8 @@
 package com.xclone.xclone.domain.user;
 
 import com.xclone.xclone.constants.BANNED;
-import com.xclone.xclone.domain.bookmark.BookmarkService;
 import com.xclone.xclone.domain.feed.EdgeRank;
-import com.xclone.xclone.domain.follow.Follow;
-import com.xclone.xclone.domain.follow.FollowRepository;
-import com.xclone.xclone.domain.like.LikeService;
 import com.xclone.xclone.domain.post.PostService;
-import com.xclone.xclone.domain.retweet.RetweetService;
 import com.xclone.xclone.storage.CloudStorageService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
@@ -27,13 +22,13 @@ public class UserService {
     private final BookmarkService bookmarkService;
     private final LikeService likeService;
 
-    private final RetweetService retweetService;
+    private final RetSErvice retweetService;
     private final FollowRepository followRepository;
     private final EdgeRank edgeRank;
     private final CloudStorageService cloudStorageService;
 
     @Autowired
-    public UserService(UserRepository userRepository, PostService postService, BookmarkService bookmarkService, LikeService likeService, RetweetService retweetService, FollowRepository followRepository, EdgeRank edgeRank, CloudStorageService cloudStorageService) {
+    public UserService(UserRepository userRepository, PostService postService, BookmarkService bookmarkService, LikeService likeService, RetSErvice retweetService, FollowRepository followRepository, EdgeRank edgeRank, CloudStorageService cloudStorageService) {
         this.userRepository = userRepository;
         this.postService = postService;
         this.bookmarkService = bookmarkService;

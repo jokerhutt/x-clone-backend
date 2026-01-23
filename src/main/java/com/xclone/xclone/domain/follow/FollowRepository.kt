@@ -1,16 +1,15 @@
-package com.xclone.xclone.domain.follow;
-import org.springframework.data.jpa.repository.JpaRepository;
+package com.xclone.xclone.domain.follow
 
-import java.util.ArrayList;
-import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository
+import java.util.Optional
 
-public interface FollowRepository extends JpaRepository<Follow, Integer> {
+interface FollowRepository : JpaRepository<Follow, Int> {
 
-    ArrayList<Follow> findAllByFollowerId(Integer followerId);
+    fun findAllByFollowerId(followerId: Int): List<Follow>
 
-    boolean existsByFollowedIdAndFollowerId(Integer followedId, Integer followerId);
+    fun existsByFollowedIdAndFollowerId(followedId: Int, followerId: Int): Boolean
 
-    Optional<Follow> findByFollowedIdAndFollowerId(Integer followedId, Integer followerId);
+    fun findByFollowedIdAndFollowerId(followedId: Int, followerId: Int): Optional<Follow>
 
-    ArrayList<Follow> findAllByFollowedId(Integer followedId);
+    fun findAllByFollowedId(followedId: Int): List<Follow>
 }

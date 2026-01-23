@@ -1,48 +1,34 @@
-package com.xclone.xclone.domain.like;
-import com.xclone.xclone.domain.bookmark.NewBookmark;
-import com.xclone.xclone.domain.post.PostDTO;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+package com.xclone.xclone.domain.like
 
-import java.util.Map;
+import com.xclone.xclone.commons.ApiPaths
+import com.xclone.xclone.domain.post.api.dto.PostDTO
+import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
+import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/likes")
-public class LikeController {
+@RequestMapping(ApiPaths.LIKES.BASE)
+class LikeController(
+    private val likeService: LikeService
+) {
 
-    private final LikeService likeService;
-
-    public LikeController(LikeService likeService) {
-        this.likeService = likeService;
+    @PostMapping(ApiPaths.LIKES.CREATE)
+    fun createLike(
+        @RequestBody newLike: NewLike,
+        auth: Authentication
+    ): ResponseEntity<PostDTO> {
+        val authUserId = auth.principal as Int
+        val postToReturn = likeService.addNewLike(authUserId, newLike.likedPostId)
+        return ResponseEntity.ok(postToReturn)
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createLike(@RequestBody NewLike newLike, Authentication auth) {
-        Integer authUserId = (Integer) auth.getPrincipal();
-
-        try {
-            PostDTO postToReturn = likeService.addNewLike(authUserId, newLike.getLikedPostId());
-            return ResponseEntity.ok(postToReturn);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
-        }
+    @PostMapping(ApiPaths.LIKES.DELETE)
+    fun removeLike(
+        @RequestBody newLike: NewLike,
+        auth: Authentication
+    ): ResponseEntity<PostDTO> {
+        val authUserId = auth.principal as Int
+        val postToReturn = likeService.deleteLike(authUserId, newLike.likedPostId)
+        return ResponseEntity.ok(postToReturn)
     }
-
-    @PostMapping("/delete")
-    public ResponseEntity<?> removeLike(@RequestBody NewLike newLike, Authentication auth) {
-        Integer authUserId = (Integer) auth.getPrincipal();
-        try {
-            PostDTO postToReturn = likeService.deleteLike(authUserId, newLike.getLikedPostId());
-            return ResponseEntity.ok(postToReturn);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        }
-
-
-    }
-
-
-
 }

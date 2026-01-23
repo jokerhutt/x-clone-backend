@@ -1,26 +1,15 @@
 package com.xclone.xclone.domain.post;
 
 import com.xclone.xclone.domain.bookmark.Bookmark;
-import com.xclone.xclone.domain.bookmark.BookmarkRepository;
+import com.xclone.xclone.domain.bookmark.infra.repository.BookmarkRepository;
 import com.xclone.xclone.domain.feed.EdgeRank;
-import com.xclone.xclone.domain.like.Like;
-import com.xclone.xclone.domain.like.LikeRepository;
-import com.xclone.xclone.domain.notification.Notification;
-import com.xclone.xclone.domain.notification.NotificationService;
 import com.xclone.xclone.domain.post.poll.Poll;
 import com.xclone.xclone.domain.post.poll.PollsRepository;
-import com.xclone.xclone.domain.retweet.Retweet;
-import com.xclone.xclone.domain.retweet.RetweetRepository;
-import com.xclone.xclone.domain.user.User;
-import com.xclone.xclone.domain.user.UserRepository;
 import com.xclone.xclone.storage.CloudStorageService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.*;
-
-import static com.xclone.xclone.util.PollUtils.checkPollExpiry;
 
 @Service
 public class PostService {

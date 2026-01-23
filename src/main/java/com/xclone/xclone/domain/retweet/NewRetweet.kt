@@ -1,9 +1,7 @@
-package com.xclone.xclone.domain.retweet;
+package com.xclone.xclone.domain.retweet
 
-public class NewRetweet {
-
-    public Integer retweeterId;
-    public Integer referenceId;
-    public String type;
-
-}
+data class NewRetweet(
+    val retweeterId: Int,
+    val referenceId: Int,
+    val type: String
+)

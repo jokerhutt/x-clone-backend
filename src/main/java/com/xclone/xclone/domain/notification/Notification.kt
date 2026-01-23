@@ -1,98 +1,40 @@
-package com.xclone.xclone.domain.notification;
-import jakarta.persistence.*;
+package com.xclone.xclone.domain.notification
 
-import java.sql.Timestamp;
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Table
+import java.sql.Timestamp
 
 @Entity
 @Table(name = "notifications")
-public class Notification {
+class Notification(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id", nullable = false, updatable = false)
+    var id: Int? = null,
 
-    @Column(name = "receiver_id")
-    private Integer receiverId;
+    @Column(name = "receiver_id", nullable = false)
+    var receiverId: Int,
 
-    @Column(name = "sender_id")
-    private Integer senderId;
+    @Column(name = "sender_id", nullable = false)
+    var senderId: Int,
 
-    @Column(name = "type")
-    private String type;
+    @Column(name = "type", nullable = false)
+    var type: String,
 
     @Column(name = "reference_id")
-    private Integer referenceId;
+    var referenceId: Int? = null,
 
     @Column(name = "text")
-    private String text;
+    var text: String? = null,
 
-    @Column(name = "seen")
-    private boolean seen;
+    @Column(name = "seen", nullable = false)
+    var seen: Boolean = false,
 
     @Column(name = "created_at", updatable = false, insertable = false)
-    private Timestamp createdAt;
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getReceiverId() {
-        return receiverId;
-    }
-
-    public void setReceiverId(Integer receiverId) {
-        this.receiverId = receiverId;
-    }
-
-    public Integer getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(Integer senderId) {
-        this.senderId = senderId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Integer getReferenceId() {
-        return referenceId;
-    }
-
-    public void setReferenceId(Integer referenceId) {
-        this.referenceId = referenceId;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public boolean isSeen() {
-        return seen;
-    }
-
-    public void setSeen(boolean seen) {
-        this.seen = seen;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-}
+    var createdAt: Timestamp? = null
+)

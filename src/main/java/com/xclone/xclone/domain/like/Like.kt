@@ -1,52 +1,28 @@
-package com.xclone.xclone.domain.like;
+package com.xclone.xclone.domain.like
 
-import jakarta.persistence.*;
-
-import java.sql.Timestamp;
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Table
+import java.sql.Timestamp
 
 @Entity
 @Table(name = "likes")
-public class Like {
+class Like(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id", nullable = false, updatable = false)
+    var id: Int? = null,
 
-    @Column(name = "liker_id")
-    private Integer likerId;
+    @Column(name = "liker_id", nullable = false)
+    var likerId: Int,
 
-    @Column(name = "post_id")
-    private Integer likedPostId;
-
-    public Integer getId() {
-        return id;
-    }
+    @Column(name = "post_id", nullable = false)
+    var likedPostId: Int,
 
     @Column(name = "created_at", updatable = false, insertable = false)
-    private Timestamp createdAt;
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getLikerId() {
-        return likerId;
-    }
-
-    public void setLikerId(Integer likerId) {
-        this.likerId = likerId;
-    }
-
-    public Integer getLikedPostId() {
-        return likedPostId;
-    }
-
-    public void setLikedPostId(Integer likedPostId) {
-        this.likedPostId = likedPostId;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-}
+    var createdAt: Timestamp? = null
+)

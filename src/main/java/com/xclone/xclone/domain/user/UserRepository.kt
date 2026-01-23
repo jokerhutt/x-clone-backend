@@ -1,48 +1,60 @@
-package com.xclone.xclone.domain.user;
+package com.xclone.xclone.domain.user
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
+import java.sql.Timestamp
+import java.util.Optional
 
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+interface UserRepository : JpaRepository<User, Int> {
 
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
+    fun findByUsername(username: String): User?
 
-public interface UserRepository extends JpaRepository<User, Integer> {
-    User findByUsername(String username);
-    Optional<User> findById(int id);
+    override fun findById(id: Int): Optional<User>
 
-    boolean existsUserByEmail(String email);
+    fun existsUserByEmail(email: String): Boolean
 
-    boolean existsUserByUsername(String username);
+    fun existsUserByUsername(username: String): Boolean
 
-    @Query("""
-    SELECT u FROM User u
-    WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%'))
-       OR LOWER(u.displayName) LIKE LOWER(CONCAT('%', :query, '%'))
-    """)
-    List<User> searchByUsernameOrDisplayName(@Param("query") String query);
+    @Query(
+        """
+        SELECT u FROM User u
+        WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%'))
+           OR LOWER(u.displayName) LIKE LOWER(CONCAT('%', :query, '%'))
+        """
+    )
+    fun searchByUsernameOrDisplayName(@Param("query") query: String): List<User>
 
-    @Query(value = """
-      SELECT u.id
-      FROM users u
-      LEFT JOIN follows f ON f.followed_id = u.id
-      GROUP BY u.id
-      HAVING COUNT(f.follower_id) <= :cursor
-      ORDER BY COUNT(f.follower_id) DESC
-      LIMIT :limit
-  """, nativeQuery = true)
-    List<Integer> findUserIdsByFollowerCount(@Param("cursor") long cursor, @Param("limit") int limit);
+    @Query(
+        value = """
+          SELECT u.id
+          FROM users u
+          LEFT JOIN follows f ON f.followed_id = u.id
+          GROUP BY u.id
+          HAVING COUNT(f.follower_id) <= :cursor
+          ORDER BY COUNT(f.follower_id) DESC
+          LIMIT :limit
+        """,
+        nativeQuery = true
+    )
+    fun findUserIdsByFollowerCount(
+        @Param("cursor") cursor: Long,
+        @Param("limit") limit: Int
+    ): List<Int>
 
-    @Query(value = """
-      SELECT u.id
-      FROM users u
-      WHERE u.created_at < :cursor
-      ORDER BY u.created_at DESC  
-  """, nativeQuery = true)
-    List<Integer> findUserIdsByCreatedAtCustom(@Param("cursor") Timestamp cursor,  Pageable pageable);
+    @Query(
+        value = """
+          SELECT u.id
+          FROM users u
+          WHERE u.created_at < :cursor
+          ORDER BY u.created_at DESC
+        """,
+        nativeQuery = true
+    )
+    fun findUserIdsByCreatedAtCustom(
+        @Param("cursor") cursor: Timestamp,
+        pageable: Pageable
+    ): List<Int>
 
-
-    Optional<User> findByGoogleId(String googleId);
+    fun findByGoogleId(googleId: String): Optional<User>
 }

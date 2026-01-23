@@ -1,20 +1,10 @@
 package com.xclone.xclone.domain.post;
 
-import com.xclone.xclone.constants.BANNED;
-import com.xclone.xclone.domain.notification.NotificationService;
 import com.xclone.xclone.domain.post.poll.PollService;
-import com.xclone.xclone.domain.user.User;
-import com.xclone.xclone.domain.user.UserDTO;
 import com.xclone.xclone.domain.user.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;

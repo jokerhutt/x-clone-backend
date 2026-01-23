@@ -1,11 +1,8 @@
 package com.xclone.xclone.domain.feed;
 
-import com.xclone.xclone.domain.like.Like;
-import com.xclone.xclone.domain.like.LikeRepository;
 import com.xclone.xclone.domain.post.Post;
 import com.xclone.xclone.domain.post.PostMediaRepository;
 import com.xclone.xclone.domain.post.PostRepository;
-import com.xclone.xclone.domain.user.UserDTO;
 import com.xclone.xclone.domain.user.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

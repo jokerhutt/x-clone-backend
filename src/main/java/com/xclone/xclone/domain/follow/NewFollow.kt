@@ -1,8 +1,3 @@
-package com.xclone.xclone.domain.follow;
+package com.xclone.xclone.domain.follow
 
-public class NewFollow {
-
-    public Integer followerId;
-    public Integer followedId;
-
-}
+data class NewFollow(val followerId: Int, val followedId: Int)

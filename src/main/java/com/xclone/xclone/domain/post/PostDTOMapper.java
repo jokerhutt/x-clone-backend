@@ -1,13 +1,8 @@
 package com.xclone.xclone.domain.post;
 
 import com.xclone.xclone.domain.bookmark.Bookmark;
-import com.xclone.xclone.domain.bookmark.BookmarkRepository;
-import com.xclone.xclone.domain.like.Like;
-import com.xclone.xclone.domain.like.LikeRepository;
 import com.xclone.xclone.domain.post.poll.Poll;
 import com.xclone.xclone.domain.post.poll.PollsRepository;
-import com.xclone.xclone.domain.retweet.Retweet;
-import com.xclone.xclone.domain.retweet.RetweetRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
