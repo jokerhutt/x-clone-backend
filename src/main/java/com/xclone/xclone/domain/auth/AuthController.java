@@ -1,6 +1,5 @@
 package com.xclone.xclone.domain.auth;
 
-import com.xclone.xclone.domain.user.UserService;
 import com.xclone.xclone.security.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +15,10 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
-    private final UserService userService;
+    private final UserServicee userService;
     private final JwtService jwtService;
 
-    public AuthController(AuthService authService, UserService userService, JwtService jwtService) {
+    public AuthController(AuthService authService, UserServicee userService, JwtService jwtService) {
         this.authService = authService;
         this.userService = userService;
         this.jwtService = jwtService;

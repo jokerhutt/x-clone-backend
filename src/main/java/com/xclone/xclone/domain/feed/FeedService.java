@@ -1,7 +1,6 @@
 package com.xclone.xclone.domain.feed;
 
 import com.xclone.xclone.domain.post.*;
-import com.xclone.xclone.domain.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,13 +17,13 @@ public class FeedService {
     private final FeedEntryRepository feedEntryRepository;
     private final EdgeRank edgeRank;
     private final UserRepository userRepository;
-    private final UserService userService;
+    private final UserServicee userService;
     private final PostMediaRepository postMediaRepository;
     private final NotificationRepository notificationRepository;
     PostRepository postRepository;
 
     @Autowired
-    public FeedService(PostRepository postRepository, LikeRepository likeRepository, BookmarkRepository bookmarkRepository, FeedEntryRepository feedEntryRepository, EdgeRank edgeRank, UserRepository userRepository, UserService userService, PostMediaRepository postMediaRepository, NotificationRepository notificationRepository) {
+    public FeedService(PostRepository postRepository, LikeRepository likeRepository, BookmarkRepository bookmarkRepository, FeedEntryRepository feedEntryRepository, EdgeRank edgeRank, UserRepository userRepository, UserServicee userService, PostMediaRepository postMediaRepository, NotificationRepository notificationRepository) {
         this.postRepository = postRepository;
         this.likeRepository = likeRepository;
         this.bookmarkRepository = bookmarkRepository;

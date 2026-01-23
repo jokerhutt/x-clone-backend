@@ -1,7 +1,6 @@
 package com.xclone.xclone.domain.post;
 
 import com.xclone.xclone.domain.post.poll.PollService;
-import com.xclone.xclone.domain.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +20,11 @@ public class PostController {
     private final PostService postService;
     private final NotificationService notificationService;
     private final PostRepository postRepository;
-    private final UserService userService;
+    private final UserServicee userService;
     private final PollService pollService;
 
     @Autowired
-    public PostController(PostService postService, NotificationService notificationService, PostRepository postRepository, UserService userService, PollService pollService) {
+    public PostController(PostService postService, NotificationService notificationService, PostRepository postRepository, UserServicee userService, PollService pollService) {
         this.postService = postService;
         this.notificationService = notificationService;
         this.postRepository = postRepository;

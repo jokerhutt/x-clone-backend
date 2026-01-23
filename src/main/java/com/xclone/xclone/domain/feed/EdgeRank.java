@@ -3,7 +3,6 @@ package com.xclone.xclone.domain.feed;
 import com.xclone.xclone.domain.post.Post;
 import com.xclone.xclone.domain.post.PostMediaRepository;
 import com.xclone.xclone.domain.post.PostRepository;
-import com.xclone.xclone.domain.user.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -25,11 +24,11 @@ public class EdgeRank {
     private final PostRepository postRepository;
     private final PostMediaRepository postMediaRepository;
     private final LikeRepository likeRepository;
-    private final UserService userService;
+    private final UserServicee userService;
     private final FeedEntryRepository feedEntryRepository;
 
     @Autowired
-    public EdgeRank (PostRepository postRepository, PostMediaRepository postMediaRepository, LikeRepository likeRepository, @Lazy UserService userService, FeedEntryRepository feedEntryRepository) {
+    public EdgeRank (PostRepository postRepository, PostMediaRepository postMediaRepository, LikeRepository likeRepository, @Lazy UserServicee userService, FeedEntryRepository feedEntryRepository) {
         this.postRepository = postRepository;
         this.postMediaRepository = postMediaRepository;
         this.likeRepository = likeRepository;
