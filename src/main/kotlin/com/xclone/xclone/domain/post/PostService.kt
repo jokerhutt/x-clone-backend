@@ -6,7 +6,7 @@ import com.xclone.xclone.domain.poll.PollsRepository
 import com.xclone.xclone.domain.retweet.RetweetRepository
 import com.xclone.xclone.domain.user.User
 import com.xclone.xclone.domain.user.UserRepository
-import com.xclone.xclone.storage.CloudStorageService
+import com.xclone.xclone.storage.app.service.GCSCloudStorageService
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
 import org.springframework.http.HttpStatus
@@ -21,7 +21,7 @@ class PostService(
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
     private val notificationService: NotificationService,
-    private val cloudStorageService: CloudStorageService,
+    private val GCSCloudStorageService: GCSCloudStorageService,
     private val postMediaRepository: PostMediaRepository,
     private val pollsRepository: PollsRepository,
     private val bookmarkRepository: BookmarkRepository,
@@ -199,7 +199,7 @@ class PostService(
             val fileName = "${UUID.randomUUID()}_${file.originalFilename}"
             val mimeType = file.contentType
 
-            val url = cloudStorageService.upload(fileName, file.inputStream, mimeType)
+            val url = GCSCloudStorageService.upload(fileName, file.inputStream, mimeType)
 
             val media = PostMedia(
                 postId = postId,

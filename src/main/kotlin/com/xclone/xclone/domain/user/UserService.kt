@@ -8,7 +8,7 @@ import com.xclone.xclone.domain.follow.FollowRepository
 import com.xclone.xclone.domain.like.LikeService
 import com.xclone.xclone.domain.post.PostService
 import com.xclone.xclone.domain.retweet.RetweetService
-import com.xclone.xclone.storage.CloudStorageService
+import com.xclone.xclone.storage.app.service.GCSCloudStorageService
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -24,7 +24,7 @@ class UserService(
     private val likeService: LikeService,
     private val followRepository: FollowRepository,
     private val retweetService: RetweetService,
-    private val cloudStorageService: CloudStorageService,
+    private val GCSCloudStorageService: GCSCloudStorageService,
     private val edgeRank: EdgeRank
 ) {
 
@@ -82,14 +82,14 @@ class UserService(
         if (profilePicture != null && !profilePicture.isEmpty) {
             val fileName = "${UUID.randomUUID()}_${profilePicture.originalFilename}"
             val mimeType = profilePicture.contentType
-            val url = cloudStorageService.upload(fileName, profilePicture.inputStream, mimeType)
+            val url = GCSCloudStorageService.upload(fileName, profilePicture.inputStream, mimeType)
             user.profilePictureUrl = url
         }
 
         if (bannerImage != null && !bannerImage.isEmpty) {
             val fileName = "${UUID.randomUUID()}_${bannerImage.originalFilename}"
             val mimeType = bannerImage.contentType
-            val url = cloudStorageService.upload(fileName, bannerImage.inputStream, mimeType)
+            val url = GCSCloudStorageService.upload(fileName, bannerImage.inputStream, mimeType)
             user.bannerImageUrl = url
         }
 
