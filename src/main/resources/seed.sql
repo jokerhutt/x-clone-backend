@@ -116,7 +116,8 @@ create table if not exists xclone_db.post_media
     file_name  varchar(255)                        null,
     mime_type  varchar(100)                        null,
     created_at timestamp default CURRENT_TIMESTAMP null,
-    url        varchar(500)                        null
+    url        varchar(500)                        null,
+    storage_key varchar(512) not null
 );
 
 create index post_id
@@ -174,6 +175,8 @@ create table if not exists xclone_db.users
     google_id           varchar(100)                         null,
     profile_picture_url varchar(512)                         null,
     banner_image_url    varchar(512)                         null,
+    pfp_key varchar(512) not null,
+    banner_key varchar(512) not null,
     pinned_post_id      int                                  null,
     verified            tinyint(1) default 0                 not null,
     constraint UK6dotkott2kjsp8vw4d0m25fb7

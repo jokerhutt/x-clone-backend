@@ -8,6 +8,7 @@ import com.xclone.xclone.domain.follow.FollowRepository
 import com.xclone.xclone.domain.like.LikeService
 import com.xclone.xclone.domain.post.PostService
 import com.xclone.xclone.domain.retweet.RetweetService
+import com.xclone.xclone.storage.app.port.`in`.MediaStoragePort
 import com.xclone.xclone.storage.app.service.GCSCloudStorageService
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest
@@ -24,8 +25,8 @@ class UserService(
     private val likeService: LikeService,
     private val followRepository: FollowRepository,
     private val retweetService: RetweetService,
-    private val GCSCloudStorageService: GCSCloudStorageService,
-    private val edgeRank: EdgeRank
+    private val edgeRank: EdgeRank,
+    private val mediaStoragePort: MediaStoragePort
 ) {
 
 
@@ -48,6 +49,15 @@ class UserService(
         val userFollowerIds = userFollowers.map { it -> it.followerId }
         val userReplies = postService.findAllRepliesByUserId(userId)
         val userRetweets = retweetService.getAllRetweetedPostsByUserId(userId)
+
+        val pfpSignedUrl = user.pfpKey
+            ?.takeIf { it.isNotBlank() }
+            ?.let { mediaStoragePort.presignedGetUrl(it) }
+
+        val bannerSignedUrl = user.bannerKey
+            ?.takeIf { it.isNotBlank() }
+            ?.let { mediaStoragePort.presignedGetUrl(it) }
+
         return UserDTO(
             id = userId,
             username = user.username,
@@ -62,35 +72,61 @@ class UserService(
             createdAt = user.createdAt,
             replies = userReplies,
             retweets = userRetweets,
-            profilePictureUrl = user.profilePictureUrl,
-            bannerImageUrl = user.bannerImageUrl,
+            profilePictureUrl = pfpSignedUrl,
+            bannerImageUrl = bannerSignedUrl,
+            pfpKey = user.pfpKey,
+            bannerKey = user.bannerKey,
             pinnedPostId = user.pinnedPostId,
             verified = user.verified
         )
     }
 
-    fun updateUserProfile (userId: Int, profilePicture: MultipartFile, bannerImage: MultipartFile, displayName: String, username: String, bio: String) {
-        val user = userRepository.findById(userId).orElseThrow { ApiException(ErrorCode.USER_NOT_FOUND) }
+    fun updateUserProfile(
+        userId: Int,
+        profilePicture: MultipartFile?,
+        bannerImage: MultipartFile?,
+        displayName: String,
+        username: String,
+        bio: String
+    ) {
+        val user = userRepository.findById(userId)
+            .orElseThrow { ApiException(ErrorCode.USER_NOT_FOUND) }
 
-        val userToCheck = userRepository.findByUsername(user.username)
-        if (userToCheck != null && userToCheck.username == user.username) {
+        val userToCheck = userRepository.findByUsername(username)
+        if (userToCheck != null && userToCheck.id != user.id) {
             throw ApiException(ErrorCode.USERNAME_IN_USE)
         }
-        user.username = displayName
+
+        user.displayName = displayName
+        user.username = username
         user.bio = bio
 
         if (profilePicture != null && !profilePicture.isEmpty) {
-            val fileName = "${UUID.randomUUID()}_${profilePicture.originalFilename}"
-            val mimeType = profilePicture.contentType
-            val url = GCSCloudStorageService.upload(fileName, profilePicture.inputStream, mimeType)
-            user.profilePictureUrl = url
+            val original = profilePicture.originalFilename ?: "pfp"
+            val key = "${UUID.randomUUID()}_$original"
+
+            mediaStoragePort.upload(
+                key = key,
+                inputStream = profilePicture.inputStream,
+                contentType = profilePicture.contentType,
+                contentLength = profilePicture.size
+            )
+
+            user.pfpKey = key
         }
 
         if (bannerImage != null && !bannerImage.isEmpty) {
-            val fileName = "${UUID.randomUUID()}_${bannerImage.originalFilename}"
-            val mimeType = bannerImage.contentType
-            val url = GCSCloudStorageService.upload(fileName, bannerImage.inputStream, mimeType)
-            user.bannerImageUrl = url
+            val original = bannerImage.originalFilename ?: "banner"
+            val key = "${UUID.randomUUID()}_$original"
+
+            mediaStoragePort.upload(
+                key = key,
+                inputStream = bannerImage.inputStream,
+                contentType = bannerImage.contentType,
+                contentLength = bannerImage.size
+            )
+
+            user.bannerKey = key
         }
 
         userRepository.save(user)

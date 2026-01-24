@@ -28,6 +28,9 @@ class PostMedia(
     @Column(name = "url", nullable = false)
     var url: String,
 
+    @Column(name = "storage_key", nullable = false)
+    var storageKey: String,
+
     @Column(name = "created_at", nullable = false)
     var createdAt: Timestamp = Timestamp(System.currentTimeMillis())
 

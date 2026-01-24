@@ -12,7 +12,7 @@ data class PostDTO(
     val replies: List<Int>,
     val parentId: Int?,
     val retweetedBy: List<Int>,
-    val postMedia: List<PostMedia>,
+    val postMedia: List<PostMediaDTO>,
     val pollId: Int?,
     val pollExpiryTimeStamp: Timestamp?
 )

@@ -162,6 +162,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.xclone.xclone.XcloneApplicationKt</mainClass>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -197,7 +200,13 @@
 
                 <!-- makes Spring/JPA runtime proxies work -->
                 <configuration>
+                    <sourceDirs>
+                        <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                        <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                    </sourceDirs>
+
                     <jvmTarget>${java.version}</jvmTarget>
+
                     <compilerPlugins>
                         <plugin>spring</plugin>
                         <plugin>jpa</plugin>

@@ -17,4 +17,13 @@ object DefaultNameConstants {
         "https://storage.googleapis.com/xclone-media/deftwo.png",
         "https://storage.googleapis.com/xclone-media/defone.png"
     )
+
+    val DEFAULT_PROFILE_KEYS: Array<String> = arrayOf(
+        "deffive.png",
+        "deffour.png",
+        "defthree.png",
+        "deftwo.png",
+        "defone.png"
+    )
+
 }
