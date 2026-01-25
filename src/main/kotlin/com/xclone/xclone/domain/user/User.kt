@@ -32,6 +32,12 @@ class User(
     @Column(name = "display_name", nullable = false, length = 45)
     var displayName: String,
 
+    @Column(name = "banner_key", nullable = false)
+    var bannerKey: String,
+
+    @Column(name = "pfp_key", nullable = false)
+    var pfpKey: String,
+
     @Column(name = "profile_picture_url")
     var profilePictureUrl: String? = null,
 

@@ -2,10 +2,10 @@ package com.xclone.xclone.domain.feed
 import com.xclone.xclone.domain.bookmark.infra.repository.BookmarkRepository
 import com.xclone.xclone.domain.like.LikeRepository
 import com.xclone.xclone.domain.notification.NotificationRepository
-import org.springframework.data.domain.Pageable;
 import com.xclone.xclone.domain.post.PostRepository
 import com.xclone.xclone.domain.user.UserService
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
 
@@ -50,7 +50,7 @@ class FeedService(
                         val post = postRepository.findById(lastPostIdInt)
                             .orElseThrow { IllegalArgumentException("PostId doesn't exist") }
 
-                        post.createdAt.time
+                        post.createdAt?.time
                     }
             }
         }
@@ -113,8 +113,10 @@ class FeedService(
             return postRepository.findNextPaginatedPostIdsByTime(cursorTimestamp, pageable)
         }
 
+        val userDTO = userService.generateUserDTOByUserId(userId)
+
         if (cursor == 0L) {
-            val postRanks = edgeRank.buildAndGetNewFeed(userId)
+            val postRanks = edgeRank.buildAndGetNewFeed(userId, userDTO)
             edgeRank.saveFeed(userId, postRanks)
             return feedEntryRepository.getFeedPostIdsCustom(userId, cursor, pageable)
         }
@@ -122,7 +124,7 @@ class FeedService(
         var ids = feedEntryRepository.getFeedPostIdsCustom(userId, cursor, pageable)
 
         if (ids.isEmpty()) {
-            val postRanks = edgeRank.buildAndGetNewFeed(userId)
+            val postRanks = edgeRank.buildAndGetNewFeed(userId, userDTO)
             edgeRank.saveFeed(userId, postRanks)
             ids = feedEntryRepository.getFeedPostIdsCustom(userId, cursor, pageable)
         }

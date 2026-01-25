@@ -36,8 +36,8 @@ class NotificationService(private val notificationRepository: NotificationReposi
        return NewNotification(
            senderId = senderId,
            receiverId = parentPost.userId,
-           referenceId = reply.id,
-           text = reply.text,
+           referenceId = reply.id!!,
+           text = reply.text!!,
            type = "reply"
        )
 
@@ -99,9 +99,9 @@ class NotificationService(private val notificationRepository: NotificationReposi
         return NewNotification(
             senderId = senderId,
             type = type,
-            text = post.text,
+            text = post.text!!,
             receiverId = post.userId,
-            referenceId = post.id
+            referenceId = post.id!!
         )
     }
 

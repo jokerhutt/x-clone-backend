@@ -6,7 +6,8 @@ import com.xclone.xclone.domain.poll.PollsRepository
 import com.xclone.xclone.domain.retweet.RetweetRepository
 import com.xclone.xclone.domain.user.User
 import com.xclone.xclone.domain.user.UserRepository
-import com.xclone.xclone.storage.CloudStorageService
+import com.xclone.xclone.storage.app.port.`in`.MediaStoragePort
+import com.xclone.xclone.storage.app.service.GCSCloudStorageService
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
 import org.springframework.http.HttpStatus
@@ -21,12 +22,12 @@ class PostService(
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
     private val notificationService: NotificationService,
-    private val cloudStorageService: CloudStorageService,
     private val postMediaRepository: PostMediaRepository,
     private val pollsRepository: PollsRepository,
     private val bookmarkRepository: BookmarkRepository,
     private val retweetRepository: RetweetRepository,
-    private val likeRepository: LikeRepository
+    private val likeRepository: LikeRepository,
+    private val mediaStoragePort: MediaStoragePort
 ) {
 
     fun findPostDTOById(id: Int): PostDTO? {
@@ -96,7 +97,19 @@ class PostService(
             retweetRepository.findAllByReferenceId(postId).map { it.retweeterId }
         )
 
-        val postMedia = postMediaRepository.findAllByPostId(postId)
+        val postMediaDtos = postMediaRepository.findAllByPostId(postId)
+            .map { media ->
+                PostMediaDTO(
+                    id = media.id!!,
+                    postId = media.postId,
+                    fileName = media.fileName,
+                    mimeType = media.mimeType,
+                    url = media.url,
+                    storageKey = media.storageKey,
+                    createdAt = media.createdAt
+                )
+            }
+            .toCollection(ArrayList())
 
         val poll = if (pollsRepository.existsByPostId(postId)) {
             pollsRepository.findByPostId(postId)
@@ -116,7 +129,7 @@ class PostService(
             replies = repliesIds,
             parentId = post.parentId,
             retweetedBy = retweeters,
-            postMedia = postMedia,
+            postMedia = postMediaDtos,
             pollId = pollId,
             pollExpiryTimeStamp = pollExpiryTimeStamp
         )
@@ -196,16 +209,22 @@ class PostService(
     @Throws(IOException::class)
     fun savePostImages(postId: Int, images: List<MultipartFile>) {
         for (file in images) {
-            val fileName = "${UUID.randomUUID()}_${file.originalFilename}"
+            val key = "${UUID.randomUUID()}_${file.originalFilename}"
             val mimeType = file.contentType
 
-            val url = cloudStorageService.upload(fileName, file.inputStream, mimeType)
+            mediaStoragePort.upload(
+                key = key,
+                inputStream = file.inputStream,
+                contentType = mimeType,
+                contentLength = file.size
+            )
 
             val media = PostMedia(
                 postId = postId,
                 fileName = file.originalFilename ?: "",
                 mimeType = mimeType ?: "",
-                url = url
+                storageKey = key,
+                url = key
             )
 
             postMediaRepository.save(media)

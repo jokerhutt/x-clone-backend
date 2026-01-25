@@ -16,6 +16,8 @@ data class UserDTO(
     val createdAt: Timestamp?,
     val replies: List<Int>,
     val retweets: List<Int>,
+    val pfpKey: String?,
+    val bannerKey: String?,
     val profilePictureUrl: String?,
     val bannerImageUrl: String?,
     val pinnedPostId: Int?,

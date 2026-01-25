@@ -1,6 +1,5 @@
 package com.xclone.xclone
 import com.xclone.xclone.domain.bookmark.infra.repository.BookmarkRepository
-import com.xclone.xclone.domain.post.PostMapper
 import com.xclone.xclone.domain.post.PostRepository
 import com.xclone.xclone.domain.post.PostService
 import com.xclone.xclone.domain.user.UserRepository
@@ -28,9 +27,6 @@ open class AbstractServiceTest {
 
     @MockitoBean
     lateinit var postRepository: PostRepository
-
-    @MockitoBean
-    lateinit var postDTOMapper: PostMapper
 
     @MockitoBean
     lateinit var postService: PostService
