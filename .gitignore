@@ -23,8 +23,6 @@ target/
 .env
 !.example.env
 nginx/default.conf
-application.yml
-application.yaml
 
 ### Deploy ###
 deploy.sh
