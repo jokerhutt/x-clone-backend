@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <!-- =======================
+         TABLES
+         ======================= -->
+
+    <changeSet id="001-01-create-bookmarks" author="dave">
+        <createTable tableName="bookmarks" schemaName="xclone_db">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="bookmarked_post" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bookmarked_by" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex indexName="bookmarked_by" tableName="bookmarks" schemaName="xclone_db">
+            <column name="bookmarked_by"/>
+        </createIndex>
+        <createIndex indexName="bookmarked_post" tableName="bookmarks" schemaName="xclone_db">
+            <column name="bookmarked_post"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="001-02-create-feed-entry" author="dave">
+        <createTable tableName="feed_entry" schemaName="xclone_db">
+            <column name="id" type="BIGINT UNSIGNED" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="post_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="score" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="position" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex indexName="post_id" tableName="feed_entry" schemaName="xclone_db">
+            <column name="post_id"/>
+        </createIndex>
+        <createIndex indexName="user_id" tableName="feed_entry" schemaName="xclone_db">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="001-03-create-feedback" author="dave">
+        <createTable tableName="feedback" schemaName="xclone_db">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="INT"/>
+            <column name="text" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="001-04-create-follows-seq" author="dave">
+        <createTable tableName="follows_seq" schemaName="xclone_db">
+            <column name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="001-05-create-likes" author="dave">
+        <createTable tableName="likes" schemaName="xclone_db">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="liker_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="post_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex indexName="liker_id" tableName="likes" schemaName="xclone_db">
+            <column name="liker_id"/>
+        </createIndex>
+        <createIndex indexName="post_id" tableName="likes" schemaName="xclone_db">
+            <column name="post_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="001-06-create-notifications" author="dave">
+        <createTable tableName="notifications" schemaName="xclone_db">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="receiver_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sender_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reference_id" type="INT"/>
+            <column name="text" type="TEXT"/>
+            <column name="seen" type="TINYINT(1)" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+
+        <createIndex indexName="fk_notification_receiver" tableName="notifications" schemaName="xclone_db">
+            <column name="receiver_id"/>
+        </createIndex>
+        <createIndex indexName="fk_notification_sender" tableName="notifications" schemaName="xclone_db">
+            <column name="sender_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="001-07-create-polls" author="dave">
+        <createTable tableName="polls" schemaName="xclone_db">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="post_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expires_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <createIndex indexName="post_id" tableName="polls" schemaName="xclone_db" unique="true">
+            <column name="post_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="001-08-create-poll-choices" author="dave">
+        <createTable tableName="poll_choices" schemaName="xclone_db">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="poll_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="choice" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vote_count" type="INT" defaultValueNumeric="0"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="001-09-create-poll-votes" author="dave">
+        <createTable tableName="poll_votes" schemaName="xclone_db">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="poll_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="poll_choice_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex indexName="unique_vote" tableName="poll_votes" schemaName="xclone_db" unique="true">
+            <column name="poll_id"/>
+            <column name="user_id"/>
+        </createIndex>
+
+        <createIndex indexName="user_id" tableName="poll_votes" schemaName="xclone_db">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="001-10-create-post-media" author="dave">
+        <createTable tableName="post_media" schemaName="xclone_db">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="post_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_name" type="VARCHAR(255)"/>
+            <column name="mime_type" type="VARCHAR(100)"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="url" type="VARCHAR(500)"/>
+            <column name="storage_key" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex indexName="post_id" tableName="post_media" schemaName="xclone_db">
+            <column name="post_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="001-11-create-posts" author="dave">
+        <createTable tableName="posts" schemaName="xclone_db">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text" type="VARCHAR(180)"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_id" type="INT"/>
+        </createTable>
+
+        <createIndex indexName="fk_posts_parent" tableName="posts" schemaName="xclone_db">
+            <column name="parent_id"/>
+        </createIndex>
+        <createIndex indexName="user_id" tableName="posts" schemaName="xclone_db">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="001-12-create-retweets" author="dave">
+        <createTable tableName="retweets" schemaName="xclone_db">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="reference_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="retweeter_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex indexName="fk_retweet_post" tableName="retweets" schemaName="xclone_db">
+            <column name="reference_id"/>
+        </createIndex>
+        <createIndex indexName="fk_retweet_user" tableName="retweets" schemaName="xclone_db">
+            <column name="retweeter_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="001-13-create-trends" author="dave">
+        <createTable tableName="trends" schemaName="xclone_db">
+            <column name="id" type="BIGINT UNSIGNED" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="url" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tweet_volume" type="INT"/>
+            <column name="recorded_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="001-14-create-users" author="dave">
+        <createTable tableName="users" schemaName="xclone_db">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="bio" type="VARCHAR(180)"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="display_name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="google_id" type="VARCHAR(100)"/>
+            <column name="profile_picture_url" type="VARCHAR(512)"/>
+            <column name="banner_image_url" type="VARCHAR(512)"/>
+            <column name="pfp_key" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="banner_key" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pinned_post_id" type="INT"/>
+            <column name="verified" type="TINYINT(1)" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint schemaName="xclone_db" tableName="users"
+                             constraintName="UK6dotkott2kjsp8vw4d0m25fb7"
+                             columnNames="email"/>
+
+        <addUniqueConstraint schemaName="xclone_db" tableName="users"
+                             constraintName="google_id"
+                             columnNames="google_id"/>
+
+        <addUniqueConstraint schemaName="xclone_db" tableName="users"
+                             constraintName="id_UNIQUE"
+                             columnNames="id"/>
+
+        <addUniqueConstraint schemaName="xclone_db" tableName="users"
+                             constraintName="username_UNIQUE"
+                             columnNames="name"/>
+    </changeSet>
+
+    <changeSet id="001-15-create-follows" author="dave">
+        <createTable tableName="follows" schemaName="xclone_db">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="follower_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="followed_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex indexName="followed_id" tableName="follows" schemaName="xclone_db">
+            <column name="followed_id"/>
+        </createIndex>
+        <createIndex indexName="follower_id" tableName="follows" schemaName="xclone_db">
+            <column name="follower_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- =======================
+         FOREIGN KEYS
+         ======================= -->
+
+    <changeSet id="001-16-fk-posts-user" author="dave">
+        <addForeignKeyConstraint
+                constraintName="fk_posts_user"
+                baseTableSchemaName="xclone_db"
+                baseTableName="posts"
+                baseColumnNames="user_id"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="001-17-fk-posts-parent" author="dave">
+        <addForeignKeyConstraint
+                constraintName="fk_posts_parent"
+                baseTableSchemaName="xclone_db"
+                baseTableName="posts"
+                baseColumnNames="parent_id"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="posts"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+    </changeSet>
+
+    <changeSet id="001-18-fk-likes-user" author="dave">
+        <addForeignKeyConstraint
+                constraintName="fk_likes_user"
+                baseTableSchemaName="xclone_db"
+                baseTableName="likes"
+                baseColumnNames="liker_id"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="001-19-fk-likes-post" author="dave">
+        <addForeignKeyConstraint
+                constraintName="fk_likes_post"
+                baseTableSchemaName="xclone_db"
+                baseTableName="likes"
+                baseColumnNames="post_id"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="posts"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="001-20-fk-bookmarks-user" author="dave">
+        <addForeignKeyConstraint
+                constraintName="fk_bookmarks_user"
+                baseTableSchemaName="xclone_db"
+                baseTableName="bookmarks"
+                baseColumnNames="bookmarked_by"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="001-21-fk-bookmarks-post" author="dave">
+        <addForeignKeyConstraint
+                constraintName="fk_bookmarks_post"
+                baseTableSchemaName="xclone_db"
+                baseTableName="bookmarks"
+                baseColumnNames="bookmarked_post"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="posts"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="001-22-fk-retweets-post" author="dave">
+        <addForeignKeyConstraint
+                constraintName="fk_retweets_post"
+                baseTableSchemaName="xclone_db"
+                baseTableName="retweets"
+                baseColumnNames="reference_id"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="posts"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="001-23-fk-retweets-user" author="dave">
+        <addForeignKeyConstraint
+                constraintName="fk_retweets_user"
+                baseTableSchemaName="xclone_db"
+                baseTableName="retweets"
+                baseColumnNames="retweeter_id"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="001-24-fk-post-media-post" author="dave">
+        <addForeignKeyConstraint
+                constraintName="fk_post_media_post"
+                baseTableSchemaName="xclone_db"
+                baseTableName="post_media"
+                baseColumnNames="post_id"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="posts"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="001-25-fk-feed-entry-user" author="dave">
+        <addForeignKeyConstraint
+                constraintName="fk_feed_entry_user"
+                baseTableSchemaName="xclone_db"
+                baseTableName="feed_entry"
+                baseColumnNames="user_id"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="001-26-fk-feed-entry-post" author="dave">
+        <addForeignKeyConstraint
+                constraintName="fk_feed_entry_post"
+                baseTableSchemaName="xclone_db"
+                baseTableName="feed_entry"
+                baseColumnNames="post_id"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="posts"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="001-27-fk-notifications-receiver" author="dave">
+        <addForeignKeyConstraint
+                constraintName="fk_notifications_receiver"
+                baseTableSchemaName="xclone_db"
+                baseTableName="notifications"
+                baseColumnNames="receiver_id"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="001-28-fk-notifications-sender" author="dave">
+        <addForeignKeyConstraint
+                constraintName="fk_notifications_sender"
+                baseTableSchemaName="xclone_db"
+                baseTableName="notifications"
+                baseColumnNames="sender_id"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="001-29-fk-users-pinned-post" author="dave">
+        <addForeignKeyConstraint
+                constraintName="fk_users_pinned_post"
+                baseTableSchemaName="xclone_db"
+                baseTableName="users"
+                baseColumnNames="pinned_post_id"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="posts"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+    </changeSet>
+
+    <changeSet id="001-30-fk-follows-follower" author="dave">
+        <addForeignKeyConstraint
+                constraintName="follows_ibfk_1"
+                baseTableSchemaName="xclone_db"
+                baseTableName="follows"
+                baseColumnNames="follower_id"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="001-31-fk-follows-followed" author="dave">
+        <addForeignKeyConstraint
+                constraintName="follows_ibfk_2"
+                baseTableSchemaName="xclone_db"
+                baseTableName="follows"
+                baseColumnNames="followed_id"
+                referencedTableSchemaName="xclone_db"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>
