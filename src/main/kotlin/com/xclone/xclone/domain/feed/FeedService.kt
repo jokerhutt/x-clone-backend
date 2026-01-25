@@ -113,8 +113,10 @@ class FeedService(
             return postRepository.findNextPaginatedPostIdsByTime(cursorTimestamp, pageable)
         }
 
+        val userDTO = userService.generateUserDTOByUserId(userId)
+
         if (cursor == 0L) {
-            val postRanks = edgeRank.buildAndGetNewFeed(userId)
+            val postRanks = edgeRank.buildAndGetNewFeed(userId, userDTO)
             edgeRank.saveFeed(userId, postRanks)
             return feedEntryRepository.getFeedPostIdsCustom(userId, cursor, pageable)
         }
@@ -122,7 +124,7 @@ class FeedService(
         var ids = feedEntryRepository.getFeedPostIdsCustom(userId, cursor, pageable)
 
         if (ids.isEmpty()) {
-            val postRanks = edgeRank.buildAndGetNewFeed(userId)
+            val postRanks = edgeRank.buildAndGetNewFeed(userId, userDTO)
             edgeRank.saveFeed(userId, postRanks)
             ids = feedEntryRepository.getFeedPostIdsCustom(userId, cursor, pageable)
         }

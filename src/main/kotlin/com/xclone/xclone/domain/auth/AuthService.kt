@@ -4,6 +4,7 @@ import com.xclone.xclone.constants.DefaultNameConstants
 import com.xclone.xclone.domain.feed.EdgeRank
 import com.xclone.xclone.domain.user.User
 import com.xclone.xclone.domain.user.UserRepository
+import com.xclone.xclone.domain.user.UserService
 import com.xclone.xclone.storage.app.port.`in`.MediaStoragePort
 import com.xclone.xclone.util.UserIdentityUtils.parseGoogleDisplayName
 import com.xclone.xclone.util.UserIdentityUtils.parseGoogleUserInfo
@@ -20,7 +21,8 @@ import java.util.UUID
 class AuthService(
     private val userRepository: UserRepository,
     private val edgeRank: EdgeRank,
-    private val mediaStoragePort: MediaStoragePort
+    private val mediaStoragePort: MediaStoragePort,
+    private val userService: UserService
 ) {
 
     @Transactional
@@ -120,7 +122,8 @@ class AuthService(
         )
 
         userRepository.save(newUser)
-        edgeRank.generateFeed(newUser.id!!)
+        val dto = userService.generateUserDTOByUserId(newUser.id!!)
+        edgeRank.generateFeed(newUser.id!!, dto)
 
         return newUser
     }
