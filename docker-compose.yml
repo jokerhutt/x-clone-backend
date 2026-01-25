@@ -12,7 +12,6 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./src/main/resources/seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${SPRING_DATASOURCE_PASSWORD}" ]
       interval: 5s
