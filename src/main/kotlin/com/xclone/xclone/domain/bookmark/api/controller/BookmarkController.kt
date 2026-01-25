@@ -2,6 +2,7 @@ package com.xclone.xclone.domain.bookmark.api.controller
 
 import com.xclone.xclone.commons.ApiPaths
 import com.xclone.xclone.domain.bookmark.api.dto.NewBookmarkRequest
+import com.xclone.xclone.domain.bookmark.app.service.BookmarkService
 import com.xclone.xclone.domain.post.PostDTO
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication

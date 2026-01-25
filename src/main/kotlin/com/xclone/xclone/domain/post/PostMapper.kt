@@ -44,6 +44,19 @@ class PostMapper(
 
         val postMedia = postMediaRepository.findAllByPostId(postId)
 
+        val postMediaDtos: List<PostMediaDTO> =
+            postMediaRepository.findAllByPostId(postId).map { media ->
+                PostMediaDTO(
+                    id = media.id ?: throw EntityNotFoundException("PostMedia id is null"),
+                    postId = media.postId,
+                    fileName = media.fileName,
+                    mimeType = media.mimeType,
+                    url = media.url,
+                    storageKey = media.storageKey,
+                    createdAt = media.createdAt
+                )
+            }
+
         var pollId: Int? = null
         var pollExpiry: Timestamp? = null
 
@@ -65,7 +78,7 @@ class PostMapper(
             replies = repliesIds,
             parentId = post.parentId,
             retweetedBy = retweeters,
-            postMedia = ArrayList(postMedia),
+            postMedia = postMediaDtos,
             pollId = pollId,
             pollExpiryTimeStamp = pollExpiry
         )

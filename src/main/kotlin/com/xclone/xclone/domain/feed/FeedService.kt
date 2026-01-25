@@ -2,10 +2,10 @@ package com.xclone.xclone.domain.feed
 import com.xclone.xclone.domain.bookmark.infra.repository.BookmarkRepository
 import com.xclone.xclone.domain.like.LikeRepository
 import com.xclone.xclone.domain.notification.NotificationRepository
-import org.springframework.data.domain.Pageable;
 import com.xclone.xclone.domain.post.PostRepository
 import com.xclone.xclone.domain.user.UserService
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
 
@@ -50,7 +50,7 @@ class FeedService(
                         val post = postRepository.findById(lastPostIdInt)
                             .orElseThrow { IllegalArgumentException("PostId doesn't exist") }
 
-                        post.createdAt.time
+                        post.createdAt?.time
                     }
             }
         }

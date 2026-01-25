@@ -198,7 +198,6 @@
                     </execution>
                 </executions>
 
-                <!-- makes Spring/JPA runtime proxies work -->
                 <configuration>
                     <sourceDirs>
                         <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
