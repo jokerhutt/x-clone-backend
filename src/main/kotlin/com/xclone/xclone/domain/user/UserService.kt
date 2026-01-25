@@ -1,5 +1,4 @@
 package com.xclone.xclone.domain.user
-
 import com.xclone.xclone.commons.exception.ApiException
 import com.xclone.xclone.commons.exception.ErrorCode
 import com.xclone.xclone.domain.bookmark.app.service.BookmarkService
@@ -9,7 +8,6 @@ import com.xclone.xclone.domain.like.LikeService
 import com.xclone.xclone.domain.post.PostService
 import com.xclone.xclone.domain.retweet.RetweetService
 import com.xclone.xclone.storage.app.port.`in`.MediaStoragePort
-import com.xclone.xclone.storage.app.service.GCSCloudStorageService
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -164,7 +162,8 @@ class UserService(
 
     @Transactional
     fun generateFeed(userId: Int) {
-        edgeRank.generateFeed(userId)
+        val dto = generateUserDTOByUserId(userId)
+        edgeRank.generateFeed(userId, dto)
     }
 
 

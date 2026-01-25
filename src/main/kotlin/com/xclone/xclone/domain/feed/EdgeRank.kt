@@ -1,12 +1,10 @@
 package com.xclone.xclone.domain.feed
-
 import com.xclone.xclone.domain.like.Like
 import com.xclone.xclone.domain.like.LikeRepository
 import com.xclone.xclone.domain.post.Post
 import com.xclone.xclone.domain.post.PostMediaRepository
 import com.xclone.xclone.domain.post.PostRepository
 import com.xclone.xclone.domain.user.UserDTO
-import com.xclone.xclone.domain.user.UserService
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -16,7 +14,6 @@ import kotlin.math.pow
 
 @Service
 class EdgeRank(
-    private val userService: UserService,
     private val postRepository: PostRepository,
     private val likeRepository: LikeRepository,
     private val postMediaRepository: PostMediaRepository,
@@ -25,13 +22,12 @@ class EdgeRank(
 
 
     @Transactional
-    fun generateFeed(userId: Int) {
-        val postRanks = buildAndGetNewFeed(userId)
+    fun generateFeed(userId: Int, userDTO: UserDTO) {
+        val postRanks = buildAndGetNewFeed(userId, userDTO)
         saveFeed(userId, postRanks)
     }
 
-    fun buildAndGetNewFeed(userId: Int): List<PostRank> {
-        val userDTO = userService.generateUserDTOByUserId(userId)
+    fun buildAndGetNewFeed(userId: Int, userDTO: UserDTO): List<PostRank> {
         val posts = postRepository.findAllTopLevelPosts()
         val postRanks = EdgeRankUtils.generatePostRankList(posts)
         computeTotalScore(postRanks, userDTO)
