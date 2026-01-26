@@ -37,8 +37,9 @@ x:
     token: ${X_BEARER_TOKEN}
 
 storage:
-  mode: ${STORAGE_MODE}
+  mode: ${STORAGE_MODE:s3}
   s3:
+    endpoint: ${S3_ENDPOINT}
     bucket: ${S3_BUCKET}
     region: ${AWS_REGION}
     pathStyle: ${S3_PATH_STYLE:false}

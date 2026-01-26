@@ -1,7 +1,6 @@
 package com.xclone.xclone.storage.configuration
 
 import com.google.cloud.storage.Storage
-import com.xclone.xclone.storage.configuration.StorageProperties
 import com.xclone.xclone.storage.app.port.`in`.MediaStoragePort
 import com.xclone.xclone.storage.app.service.GCSCloudStorageService
 import com.xclone.xclone.storage.app.service.S3CloudStorageService
