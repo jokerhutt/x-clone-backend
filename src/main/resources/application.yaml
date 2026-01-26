@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: xclone
+
+  liquibase:
+    enabled: true
+    change-log: db/changelog/db.changelog-master.xml
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+cors:
+  origins: ${FRONTEND_ORIGINS}
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: off
+        type:
+          descriptor:
+            sql:
+              BasicBinder: off
+
+x:
+  bearer:
+    token: ${X_BEARER_TOKEN}
+
+storage:
+  mode: ${STORAGE_MODE:s3}
+  s3:
+    endpoint: ${S3_ENDPOINT}
+    bucket: ${S3_BUCKET}
+    region: ${AWS_REGION}
+    pathStyle: ${S3_PATH_STYLE:false}
+  gcs:
+    project-id:
+    bucket:
+    host:
+    credentials-json:
+
+gcs:
+  bucket: ${GCS_BUCKET:xclone-media}
+  project-id: ${GCS_PROJECT_ID}
+
+jwt:
+  secret: ${JWT_SECRET:wYYymgpFMPVY2WJGoPbktTDxqkDzE6bETFxURJYuMQ3mvStEQVzxV8Pon8A06YE6btATDcwXAFH5M7qQisiVCe}
