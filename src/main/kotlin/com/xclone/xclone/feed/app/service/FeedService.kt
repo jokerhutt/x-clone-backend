@@ -25,7 +25,7 @@ class FeedService(
     fun getPaginatedPostIds(cursor: Long, limit: Int, userId: Int?, type: String): Map<String, Any?> {
         val pageable: Pageable = PageRequest.of(0, limit)
 
-        val ids: List<Int> = getPaginatedFeed(type, userId ?: 0, cursor, pageable)
+        val ids = getPaginatedFeed(type, userId, cursor, pageable)
 
         var nextCursor: Long? = null
 
@@ -63,7 +63,7 @@ class FeedService(
         )
     }
 
-    fun getPaginatedFeed(type: String, userId: Int, cursor: Long, pageable: Pageable) : List<Int> {
+    fun getPaginatedFeed(type: String, userId: Int?, cursor: Long, pageable: Pageable) : List<Int> {
         val cursorTimestamp = Timestamp(cursor)
 
         return when (type.lowercase()) {
