@@ -1,8 +1,8 @@
 package com.xclone.xclone.helpers
-import com.xclone.xclone.domain.bookmark.Bookmark
-import com.xclone.xclone.domain.post.Post
-import com.xclone.xclone.domain.post.PostDTO
-import com.xclone.xclone.domain.user.User
+import com.xclone.xclone.bookmark.domain.entity.Bookmark
+import com.xclone.xclone.post.api.dto.response.PostDTO
+import com.xclone.xclone.post.domain.entity.Post
+import com.xclone.xclone.user.domain.entity.User
 import com.xclone.xclone.utils.TestConstants
 import java.sql.Timestamp
 import java.time.Instant
@@ -15,7 +15,9 @@ object ServiceLayerHelper {
             id = TestConstants.USER_ID,
             username = TestConstants.USERNAME,
             email = TestConstants.USER_EMAIL,
-            displayName = TestConstants.DISPLAY_NAME
+            displayName = TestConstants.DISPLAY_NAME,
+            pfpKey = "",
+            bannerKey = ""
         )
     }
 

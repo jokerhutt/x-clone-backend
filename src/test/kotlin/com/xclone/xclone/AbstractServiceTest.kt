@@ -1,8 +1,8 @@
 package com.xclone.xclone
-import com.xclone.xclone.domain.bookmark.infra.repository.BookmarkRepository
-import com.xclone.xclone.domain.post.PostRepository
-import com.xclone.xclone.domain.post.PostService
-import com.xclone.xclone.domain.user.UserRepository
+import com.xclone.xclone.bookmark.infra.repository.BookmarkRepository
+import com.xclone.xclone.post.app.service.PostService
+import com.xclone.xclone.post.infra.http.PostRepository
+import com.xclone.xclone.user.infra.http.UserRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest

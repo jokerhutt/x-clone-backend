@@ -1,11 +1,11 @@
 package com.xclone.xclone.utils
 
-import com.xclone.xclone.domain.poll.Poll
-import com.xclone.xclone.domain.poll.PollsRepository
-import com.xclone.xclone.domain.post.Post
-import com.xclone.xclone.domain.post.PostMedia
-import com.xclone.xclone.domain.post.PostMediaRepository
-import com.xclone.xclone.domain.post.PostRepository
+import com.xclone.xclone.poll.domain.entity.Poll
+import com.xclone.xclone.poll.infra.http.PollsRepository
+import com.xclone.xclone.post.domain.entity.Post
+import com.xclone.xclone.post.domain.entity.PostMedia
+import com.xclone.xclone.post.infra.http.PostMediaRepository
+import com.xclone.xclone.post.infra.http.PostRepository
 import java.sql.Timestamp
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -31,7 +31,8 @@ object PostTestUtils {
             postId = post.id!!,
             fileName = "file.jpg",
             mimeType = "image/jpeg",
-            url = "https://example.com/file.jpg"
+            url = "https://example.com/file.jpg",
+            storageKey = "file.jpg"
         )
         mediaRepo.save(media)
 

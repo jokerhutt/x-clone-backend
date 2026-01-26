@@ -1,6 +1,6 @@
 package com.xclone.xclone.domain.bookmark
 
-import com.xclone.xclone.domain.bookmark.infra.repository.BookmarkRepository
+import com.xclone.xclone.bookmark.infra.repository.BookmarkRepository
 import com.xclone.xclone.helpers.JpaTestFactory
 import com.xclone.xclone.utils.TestConstants
 import org.assertj.core.api.Assertions.assertThat

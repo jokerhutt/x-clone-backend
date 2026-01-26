@@ -1,6 +1,6 @@
 package com.xclone.xclone.domain.bookmark
 import com.xclone.xclone.AbstractServiceTest
-import com.xclone.xclone.domain.bookmark.app.service.BookmarkService
+import com.xclone.xclone.bookmark.app.service.BookmarkService
 import com.xclone.xclone.domain.post.Post
 import com.xclone.xclone.domain.user.User
 import com.xclone.xclone.helpers.ExceptionAssertHelper.assertIllegalState

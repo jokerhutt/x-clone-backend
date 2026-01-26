@@ -18,7 +18,7 @@ class StorageProperties (
     )
 
     data class S3(
-        var region: String = "auto",
+        var region: String = "eu-west-1",
         var bucket: String = "",
         var endpoint: String = ""
     )

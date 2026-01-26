@@ -1,8 +1,8 @@
 package com.xclone.xclone.helpers
 
-import com.xclone.xclone.domain.bookmark.Bookmark
-import com.xclone.xclone.domain.post.Post
-import com.xclone.xclone.domain.user.User
+import com.xclone.xclone.bookmark.domain.entity.Bookmark
+import com.xclone.xclone.post.domain.entity.Post
+import com.xclone.xclone.user.domain.entity.User
 import com.xclone.xclone.utils.TestConstants
 import jakarta.persistence.EntityManager
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +20,9 @@ class JpaTestFactory {
         val user = User(
             username = username,
             email = email,
-            displayName = displayName
+            displayName = displayName,
+            bannerKey = "",
+            pfpKey = ""
         )
         entityManager.persist(user)
         return user

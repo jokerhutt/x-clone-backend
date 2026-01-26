@@ -1,12 +1,12 @@
 package com.xclone.xclone.domain.bookmark
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.xclone.xclone.domain.bookmark.api.controller.BookmarkController
-import com.xclone.xclone.domain.bookmark.app.service.BookmarkService
+import com.xclone.xclone.bookmark.api.controller.BookmarkController
+import com.xclone.xclone.bookmark.app.service.BookmarkService
 import com.xclone.xclone.helpers.MvcTestHelper
 import com.xclone.xclone.helpers.ServiceLayerHelper
-import com.xclone.xclone.security.JwtService
-import com.xclone.xclone.security.SecurityConfig
+import com.xclone.xclone.auth.app.service.JwtService
+import com.xclone.xclone.auth.configuration.SecurityConfig
 import com.xclone.xclone.utils.TestConstants
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
