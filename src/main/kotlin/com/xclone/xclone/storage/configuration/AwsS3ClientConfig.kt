@@ -23,6 +23,8 @@ class AwsS3ClientConfig(
         val s3 = props.s3
         val endpoint = s3.endpoint?.takeIf { it.isNotBlank() }
 
+        println("Endpoint is $endpoint")
+
         val builder = S3Client.builder()
             .region(Region.of(s3.region))
 
@@ -42,10 +44,15 @@ class AwsS3ClientConfig(
     @Bean
     fun s3Presigner(): S3Presigner {
         val s3 = props.s3
-        val endpoint = s3.endpoint.takeIf { it.isNotBlank() }
+        val endpoint = s3.endpoint?.takeIf { it.isNotBlank() }
 
         val builder = S3Presigner.builder()
             .region(Region.of(s3.region))
+            .serviceConfiguration(
+                S3Configuration.builder()
+                    .pathStyleAccessEnabled(s3.pathStyle)
+                    .build()
+            )
 
         if (endpoint != null) {
             builder.endpointOverride(URI.create(endpoint))
