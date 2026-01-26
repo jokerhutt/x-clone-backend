@@ -6,6 +6,6 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
 
     <!-- ===== SCHEMA ===== -->
-    <include file="/db/changelog/001-original-schema.xml"/>
+    <include file="db/changelog/001-original-schema.xml"/>
 
 </databaseChangeLog>
