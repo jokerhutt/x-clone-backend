@@ -41,7 +41,7 @@ class RetweetService(
 
         retweetRepository.save(retweet)
         notificationService.createNotificationFromType(retweeterId, retweetRequest.referenceId, "repost")
-        val postDTO = postService.findPostDTOById(retweetRequest.referenceId)
+        val postDTO = postService.getDTO(retweetRequest.referenceId)
             ?: throw ApiException(ErrorCode.POST_NOT_FOUND)
 
         return postDTO
@@ -53,7 +53,7 @@ class RetweetService(
         val toDelete = retweetRepository.findByRetweeterIdAndReferenceId(retweeterId, retweetRequest.referenceId)
             ?: throw ApiException(ErrorCode.RETWEET_NOT_FOUND)
         retweetRepository.delete(toDelete)
-        val postDTO = postService.findPostDTOById(retweetRequest.referenceId)
+        val postDTO = postService.getDTO(retweetRequest.referenceId)
             ?: throw ApiException(ErrorCode.POST_NOT_FOUND)
 
         return postDTO

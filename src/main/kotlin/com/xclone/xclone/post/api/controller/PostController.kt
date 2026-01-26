@@ -28,24 +28,24 @@ class PostController(
     private val pollService: PollService
 ) {
 
-    @PostMapping("/get-posts")
-    fun getPost(@RequestBody ids: ArrayList<Int>): ResponseEntity<Any> {
-        return ResponseEntity.ok(postService.findAllPostDTOByIds(ids))
+    @PostMapping(ApiPaths.POSTS.GET_POSTS)
+    fun getPost(@RequestBody ids: List<Int>): ResponseEntity<List<PostDTO>> {
+        return ResponseEntity.ok(postService.getDTO(ids))
     }
 
-    @GetMapping("/get-post/{id}")
+    @GetMapping(ApiPaths.POSTS.GET_SINGLE)
     fun getSinglePost(@PathVariable id: Int): ResponseEntity<Any> {
-        return ResponseEntity.ok(postService.findPostDTOById(id))
+        return ResponseEntity.ok(postService.getDTO(id))
     }
 
-    @PostMapping("/delete")
+    @PostMapping(ApiPaths.POSTS.DELETE_POST)
     fun deletePost(@RequestBody postId: Int, auth: Authentication): ResponseEntity<Any> {
         val authUserId = auth.principal as Int
         postService.deletePost(postId, authUserId)
         return ResponseEntity.ok().build()
     }
 
-    @PostMapping("/pin")
+    @PostMapping(ApiPaths.POSTS.PIN)
     fun pinPost(@RequestParam postId: Int, auth: Authentication): ResponseEntity<Any> {
         val authUserId = auth.principal as Int
         val toReturn = postService.handlePinPost(postId, authUserId, false)
@@ -53,7 +53,7 @@ class PostController(
         return ResponseEntity.ok(userToReturn)
     }
 
-    @PostMapping("/unpin")
+    @PostMapping(ApiPaths.POSTS.UNPIN)
     fun unpinPost(@RequestParam postId: Int, auth: Authentication): ResponseEntity<UserDTO> {
         val authUserId = auth.principal as Int
 
@@ -63,7 +63,7 @@ class PostController(
         return ResponseEntity.ok(userToReturn)
     }
 
-    @PostMapping("/create")
+    @PostMapping(ApiPaths.POSTS.CREATE)
     @Throws(IOException::class)
     fun createPost(
         @RequestParam(value = "text", required = false) text: String?,
@@ -94,7 +94,7 @@ class PostController(
             notificationService.createNotificationFromType(authUserId, postId, "reply")
         }
 
-        return ResponseEntity.ok(postService.findPostDTOById(postId))
+        return ResponseEntity.ok(postService.getDTO(postId))
     }
 
 

@@ -5,7 +5,8 @@ import com.xclone.xclone.poll.infra.http.PollsRepository
 import com.xclone.xclone.like.infra.repository.LikeRepository
 import com.xclone.xclone.notification.app.service.NotificationService
 import com.xclone.xclone.post.api.dto.response.PostDTO
-import com.xclone.xclone.post.api.dto.response.PostMediaDTO
+import com.xclone.xclone.post.app.mapper.PostMapper
+import com.xclone.xclone.post.app.mapper.PostMediaMapper
 import com.xclone.xclone.post.domain.entity.Post
 import com.xclone.xclone.post.domain.entity.PostMedia
 import com.xclone.xclone.post.infra.http.PostMediaRepository
@@ -34,10 +35,12 @@ class PostService(
     private val bookmarkRepository: BookmarkRepository,
     private val retweetRepository: RetweetRepository,
     private val likeRepository: LikeRepository,
-    private val mediaStoragePort: MediaStoragePort
+    private val mediaStoragePort: MediaStoragePort,
+    private val postMediaMapper: PostMediaMapper,
+    private val postMapper: PostMapper
 ) {
 
-    fun findPostDTOById(id: Int): PostDTO? {
+    fun getDTO(id: Int): PostDTO? {
         val post = postRepository.findById(id)
         return if (post.isPresent) {
             createPostDTO(post.get())
@@ -46,15 +49,9 @@ class PostService(
         }
     }
 
-    fun findAllPostDTOByIds(ids: ArrayList<Int>): ArrayList<PostDTO> {
-        val postDTOs = ArrayList<PostDTO>()
-        val posts: List<Post> = postRepository.findAllById(ids)
-
-        for (post in posts) {
-            postDTOs.add(createPostDTO(post))
-        }
-
-        return postDTOs
+    fun getDTO(ids: List<Int>): List<PostDTO> {
+        val posts = postRepository.findAllById(ids)
+        return posts.map { post -> createPostDTO(post) }
     }
 
     fun findAllPostsByUserId(id: Int): ArrayList<Int> {
@@ -104,19 +101,9 @@ class PostService(
             retweetRepository.findAllByReferenceId(postId).map { it.retweeterId }
         )
 
-        val postMediaDtos = postMediaRepository.findAllByPostId(postId)
-            .map { media ->
-                PostMediaDTO(
-                    id = media.id!!,
-                    postId = media.postId,
-                    fileName = media.fileName,
-                    mimeType = media.mimeType,
-                    url = media.url,
-                    storageKey = media.storageKey,
-                    createdAt = media.createdAt
-                )
-            }
-            .toCollection(ArrayList())
+        val postMedia = postMediaRepository.findAllByPostId(postId)
+        val postMediaDtos = postMediaMapper.toDtos(postMedia)
+
 
         val poll = if (pollsRepository.existsByPostId(postId)) {
             pollsRepository.findByPostId(postId)

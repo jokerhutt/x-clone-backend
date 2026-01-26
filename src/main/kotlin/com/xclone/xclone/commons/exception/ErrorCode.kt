@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus
 enum class ErrorCode(val status: HttpStatus, val defaultMessage: String) {
     BOOKMARK_NOT_FOUND(HttpStatus.NOT_FOUND, "Bookmark not found"),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Post not found"),
+    POST_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "Post ID not found"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
     LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "Like not found"),
     LIKE_EXISTS(HttpStatus.NOT_FOUND, "Like already exists"),

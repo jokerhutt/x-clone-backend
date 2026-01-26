@@ -19,6 +19,9 @@ spring:
       max-file-size: 20MB
       max-request-size: 20MB
 
+cors:
+  origins: ${FRONTEND_ORIGINS}
+
 logging:
   level:
     org:
@@ -38,6 +41,7 @@ storage:
   s3:
     bucket: ${S3_BUCKET}
     region: ${AWS_REGION}
+    pathStyle: ${S3_PATH_STYLE:false}
   gcs:
     project-id:
     bucket:

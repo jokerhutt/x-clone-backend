@@ -25,7 +25,7 @@ class BookmarkService(private val bookmarkRepository: BookmarkRepository, privat
 
         val newBookmark = Bookmark(bookmarkedBy = userId, bookmarkedPost = bookmarkedPost)
 
-        val bookmarkedPost = postService.findPostDTOById(bookmarkedPost)
+        val bookmarkedPost = postService.getDTO(bookmarkedPost)
         if (bookmarkedPost == null) throw ApiException(ErrorCode.POST_NOT_FOUND)
 
         bookmarkRepository.save(newBookmark)
@@ -38,7 +38,7 @@ class BookmarkService(private val bookmarkRepository: BookmarkRepository, privat
         val toDelete = bookmarkRepository.findByBookmarkedByAndBookmarkedPost(userId, bookmarkedPost).orElseThrow { ApiException(
             ErrorCode.BOOKMARK_NOT_FOUND) }
         bookmarkRepository.delete(toDelete)
-        val bookmarkedPost = postService.findPostDTOById(bookmarkedPost)
+        val bookmarkedPost = postService.getDTO(bookmarkedPost)
         if (bookmarkedPost == null) throw ApiException(ErrorCode.POST_NOT_FOUND)
         return bookmarkedPost
     }

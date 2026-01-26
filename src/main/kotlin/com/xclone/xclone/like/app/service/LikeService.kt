@@ -36,7 +36,7 @@ class LikeService(
         likeRepository.save(newLike)
         notificationService.createNotificationFromType(likerId, likedPostId, "like")
 
-        val postDto = postService.findPostDTOById(likedPostId)
+        val postDto = postService.getDTO(likedPostId)
         if (postDto == null) throw ApiException(ErrorCode.POST_NOT_FOUND)
         return postDto
     }
@@ -47,7 +47,7 @@ class LikeService(
             .orElseThrow { ApiException(ErrorCode.LIKE_NOT_FOUND) }
         likeRepository.delete(toDelete)
         notificationService.deleteNotificationFromType(likerId, likedPostId, "like")
-        val postDto = postService.findPostDTOById(likedPostId)
+        val postDto = postService.getDTO(likedPostId)
         if (postDto == null) throw ApiException(ErrorCode.POST_NOT_FOUND)
         return postDto
     }

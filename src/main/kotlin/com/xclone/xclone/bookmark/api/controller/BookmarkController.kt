@@ -1,7 +1,7 @@
 package com.xclone.xclone.bookmark.api.controller
 
 import com.xclone.xclone.commons.constants.ApiPaths
-import com.xclone.xclone.bookmark.api.dto.NewBookmarkRequest
+import com.xclone.xclone.bookmark.api.dto.BookmarkRequest
 import com.xclone.xclone.bookmark.app.service.BookmarkService
 import com.xclone.xclone.post.api.dto.response.PostDTO
 import org.springframework.http.ResponseEntity
@@ -16,7 +16,7 @@ class BookmarkController(
 
     @PostMapping(ApiPaths.BOOKMARKS.CREATE)
     fun createBookmark(
-        @RequestBody newBookmark: NewBookmarkRequest,
+        @RequestBody newBookmark: BookmarkRequest,
         auth: Authentication
     ): ResponseEntity<PostDTO> {
         val authUserId = auth.principal as Int
@@ -26,7 +26,7 @@ class BookmarkController(
 
     @PostMapping(ApiPaths.BOOKMARKS.DELETE)
     fun deleteBookmark(
-        @RequestBody newBookmark: NewBookmarkRequest,
+        @RequestBody newBookmark: BookmarkRequest,
         auth: Authentication
     ): ResponseEntity<Any> {
         val authUserId = auth.principal as Int

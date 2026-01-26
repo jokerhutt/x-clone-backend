@@ -61,14 +61,14 @@ class BookmarkServiceTest : AbstractServiceTest() {
             .thenReturn(false)
 
         val mockDto = ServiceLayerHelper.createMockPostDTOWithBookmarks(userId)
-        `when`(postService.findPostDTOById(postId))
+        `when`(postService.getDTO(postId))
             .thenReturn(mockDto)
 
         val result = bookmarkService.addNewBookmark(userId, postId)
 
         assertSame(mockDto, result)
         verify(bookmarkRepository).save(any(Bookmark::class.java))
-        verify(postService).findPostDTOById(postId)
+        verify(postService).getDTO(postId)
     }
 
     @Test
@@ -81,13 +81,13 @@ class BookmarkServiceTest : AbstractServiceTest() {
             .thenReturn(Optional.of(existing))
 
         val dto = ServiceLayerHelper.createMockPostDTO()
-        `when`(postService.findPostDTOById(postId)).thenReturn(dto)
+        `when`(postService.getDTO(postId)).thenReturn(dto)
 
         val result = bookmarkService.deleteBookmark(userId, postId)
 
         assertSame(dto, result)
         verify(bookmarkRepository).delete(existing)
-        verify(postService).findPostDTOById(postId)
+        verify(postService).getDTO(postId)
     }
 
     @Test

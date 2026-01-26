@@ -66,6 +66,12 @@ object ApiPaths {
 
     object POSTS {
         const val BASE = "$API_PREFIX/posts"
+        const val GET_POSTS = "/get-posts"
+        const val GET_SINGLE = "/get-post/{id}"
+        const val DELETE_POST = "/delete"
+        const val PIN = "/pin"
+        const val UNPIN = "/unpin"
+        const val CREATE = "/create"
     }
 
     object TRENDS {
