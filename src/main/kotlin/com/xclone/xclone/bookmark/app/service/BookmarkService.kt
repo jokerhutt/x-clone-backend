@@ -8,6 +8,8 @@ import com.xclone.xclone.post.api.dto.response.PostDTO
 import com.xclone.xclone.post.app.service.PostService
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
+import java.time.Instant
 
 @Service
 class BookmarkService(private val bookmarkRepository: BookmarkRepository, private val postService: PostService) {
@@ -23,7 +25,7 @@ class BookmarkService(private val bookmarkRepository: BookmarkRepository, privat
             throw ApiException(ErrorCode.BOOKMARK_NOT_FOUND)
         }
 
-        val newBookmark = Bookmark(bookmarkedBy = userId, bookmarkedPost = bookmarkedPost)
+        val newBookmark = Bookmark(bookmarkedBy = userId, bookmarkedPost = bookmarkedPost, createdAt = Timestamp.from(Instant.now()))
 
         val bookmarkedPost = postService.getDTO(bookmarkedPost)
         if (bookmarkedPost == null) throw ApiException(ErrorCode.POST_NOT_FOUND)

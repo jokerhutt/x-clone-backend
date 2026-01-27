@@ -26,8 +26,8 @@ object ApiPaths {
 
     object LIKES {
         const val BASE = "$API_PREFIX/likes"
-        const val CREATE = "$API_PREFIX/create"
-        const val DELETE = "$API_PREFIX/delete"
+        const val CREATE = "/create"
+        const val DELETE = "/delete"
     }
 
     object NOTIFICATIONS {
