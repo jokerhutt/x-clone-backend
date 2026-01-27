@@ -2,4 +2,5 @@
 
 ---
 
-Running the project locally 
+Running the project locally:
+
