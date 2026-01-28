@@ -28,7 +28,8 @@ class NotificationService(private val notificationRepository: NotificationReposi
             type = newNotification.type
         )
 
-        return !notificationRepository.existsById(notification.id)
+        notificationRepository.save(notification)
+        return true
     }
 
     @Transactional
