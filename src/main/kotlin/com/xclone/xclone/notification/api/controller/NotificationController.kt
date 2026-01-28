@@ -16,7 +16,7 @@ class NotificationController(
     private val notificationService: NotificationService
 ) {
 
-    @GetMapping(ApiPaths.NOTIFICATIONS.GET)
+    @GetMapping(ApiPaths.NOTIFICATIONS.GET_UNSEEN)
     fun getUsersUnseenNotifications(auth: Authentication): ResponseEntity<Any> {
         val authUserId = auth.principal as Int
         return ResponseEntity.ok(
@@ -24,7 +24,7 @@ class NotificationController(
         )
     }
 
-    @PostMapping(ApiPaths.NOTIFICATIONS.GET_UNSEEN)
+    @PostMapping(ApiPaths.NOTIFICATIONS.GET)
     fun getNotifications(@RequestBody ids: List<Int>): ResponseEntity<Any> {
         println("Received request to retrieve notifications")
         return ResponseEntity.ok(notificationService.findAllNotificationDTOsById(ids))
